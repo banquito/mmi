@@ -1,0 +1,173 @@
+
+<!DOCTYPE>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>MarkerClusterer and Fusion table</title>
+
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 10px 20px 20px;
+        font-family: Arial;
+        font-size: 16px;
+      }
+
+      #map-container {
+        padding: 6px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ccc #ccc #999 #ccc;
+        -webkit-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        -moz-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
+        width: 800px;
+      }
+
+      #map {
+        width: 1100px;
+        height: 800px;
+      }
+
+      #actions {
+        list-style: none;
+        padding: 0;
+      }
+
+      #inline-actions {
+        padding-top: 10px;
+      }
+
+      .item {
+        margin-left: 20px;
+      }
+    </style>
+	<script type="text/javascript" src="http://tile.cloudmade.com/wml/latest/web-maps-lite.js"></script>
+    <script src="http://www.google.com/jsapi"></script>	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.core.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.mouse.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.draggable.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.position.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.autocomplete.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.datepicker.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.resizable.js"></script>
+	<script type="text/javascript" src="http://jqueryui.com/ui/jquery.ui.dialog.js"></script>
+	<script type="text/javascript" src="http://gmaps-samples-v3.googlecode.com/svn/trunk/xmlparsing/util.js"></script>
+	<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer.js"></script>
+	<script type="text/javascript">
+        $(function() {
+		var availableTags = [];
+		$("#tags").autocomplete({
+			source: availableTags
+		});
+                $('#dialog').dialog({
+			autoOpen: false,
+			draggable: true,
+			width: 700,
+			height: 75
+		});
+		$('#opener').click(function() {
+			$('#dialog').dialog('open');
+			return false;
+		});
+	});
+	</script>
+    <script type="text/javascript">
+    google.load('maps', '3', {
+        other_params: 'sensor=false'
+    });
+
+    google.setOnLoadCallback(initialize);
+
+    var markerClusterer = null;
+	var cluster = null;
+    var map = null;
+    var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' + 'chco=FFFFFF,008CFF,000000&ext=.png';
+	var markers = [];
+	var elev = 1000;
+	var script = null;
+	//var geocoder = new google.maps.Geocoder();	
+
+	function initialize() {
+		map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 2,
+			center: new google.maps.LatLng(-38.416097, -63.616672),
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+		
+		var imageUrl = 'http://labs.google.com/ridefinder/images/mm_20_yellow.png';
+        		
+		
+		
+		
+		//elevation();
+		
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.charset = 'utf-8';
+		//script.src = "http://tables.googlelabs.com/api/query?sql=select * from 267862 where Altitude >" + elev + "&jsonCallback=loadFeatures";
+		script.src = "http://tables.googlelabs.com/api/query?sql=select OCURRENCIA from 1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk&jsonCallback=loadFeatures";
+		
+		document.getElementsByTagName("head")[0].appendChild(script);
+        		
+		}
+		
+		function loadFeatures(json) {
+			var imageUrl = 'http://labs.google.com/ridefinder/images/mm_20_yellow.png';
+			var markerImage = new google.maps.MarkerImage(imageUrl, new google.maps.Size(24, 32));				
+			var geocoder = new CM.Geocoder('f8d442eb53d54c6790e4cd0879fd71a7');
+			for (var i = 1; i < 300; i++) {
+				var row = json.table.rows[i];
+				geocoder.getLocations(row[0], function(response) {			
+					
+					
+					
+					var southWest = new CM.LatLng(response.bounds[0][0], response.bounds[0][1]),
+					northEast = new CM.LatLng(response.bounds[1][0], response.bounds[1][1]);		
+					for (var i = 0; i < response.features.length; i++) {
+						var coords = response.features[i].centroid.coordinates;
+						var latlng = new google.maps.LatLng(coords[0], coords[1]);
+
+						var marker = new google.maps.Marker({
+							position: latlng,
+							map:map
+						});       
+						markers.push(marker);
+					}
+					
+				});
+				
+
+			}
+			
+		}
+		
+		function mostrar()
+		{
+		markerClusterer = new MarkerClusterer(map, markers );
+		}
+		
+		
+    </script>
+  </head>
+  <body>
+        <button onclick="mostrar()">Agrupar</button>
+    <div id="map-container">
+      <div id="map"></div>
+	            <!--
+				<div id="form_container">
+              	     <div class="ui-widget">
+								<label for="tags">Station elevation: </label>
+                              	<input id="tags" name="title" />
+                              	<input class="btn" type="submit" name="formsubmit" value="submit" onclick="elevation()" />
+                              	
+                     </div>
+              	     <br />
+                </div>
+				-->
+    </div>
+    
+  </body>
+</html>

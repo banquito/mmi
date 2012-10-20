@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<!--
+  Copyright 2011 Google Inc. All Rights Reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>Fusion Tables API Example: Advanced Visualization</title>
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?sensor=false"></script>	
+	<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
+	
+	<link type="text/css" href="css/smoothness/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
+    <link href="css/default.css"
+        rel="stylesheet" type="text/css">
+    <style type="text/css">
+      #map-canvas {
+        width: auto;
+      }
+
+      #visualization {
+        float: right;
+      }
+
+      #legend {
+        background: #FFF;
+        margin: 10px;
+        padding: 5px;
+        width: 150px;
+      }
+
+      #legend p {
+        font-weight: bold;
+        margin-top: 3px;
+      }
+
+      #legend div {
+        clear: both;
+      }
+
+      .color {
+        height: 12px;
+        width: 12px;
+        margin-right: 3px;
+        float: left;
+        display: block;
+      }
+
+      .high {
+        color: #F00;
+      }
+
+      .medium {
+        color: #0F0;
+      }
+
+      .low {
+        color: #00F;
+      }
+
+      .high, .medium, .low {
+        font-weight: bold;
+      }
+    </style>
+
+    <script type="text/javascript">
+      google.load('visualization', '1', { packages: ['corechart'] });
+
+      /**
+       * Sector type mapped to a style rule.
+       * @type {Object}
+       * @const
+       */
+      var LAYER_STYLES = {
+        'tasa': {
+          'min': 0,
+          'max': 18,
+          'colors': [
+            '#f4cccc',
+            '#ea9999',
+            '#e06666',
+            '#cc0000',
+            '#990000'
+          ]
+        },
+		'causa': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#f4cccc',
+            '#ea9999',
+            '#e06666',
+            '#cc0000',
+            '#990000'
+          ]
+        }
+      }
+
+	  var layer = null;
+      function initialize() {
+		var type = $('input[name=group1]:checked').val();
+		var causa = $('input[name=group2]:checked').val();
+		var anio = '2010';
+		var map = new google.maps.Map(document.getElementById('map-canvas'), {
+          center: new google.maps.LatLng(-38.416097, -63.616672),
+          zoom: 4,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          zoomControlOptions: {
+            style: google.maps.ZoomControlStyle.SMALL
+          },
+        });
+		
+		$( "#anio" ).val( "2010" );
+		
+		$( "#slider" ).slider({
+				value:2010,
+				min: 2006,
+				max: 2010,
+				step: 1,
+				slide: function( event, ui ) {
+					$( "#anio" ).val( ui.value );
+					anio = ui.value;						
+					if (type == "causa"){
+						updateLayerQuery(layer, type, anio);
+						styleLayerBySector(layer, causa, type);
+					}
+					if (type == "tasa"){
+						updateLayerQuery(layer, type);
+						styleLayerBySector(layer, anio, type);
+					}
+				}
+		});
+			
+		$("input[name=group1]").click(function() {
+			type = $(this).val();
+			if (type == "causa"){
+				updateLayerQuery(layer, type, anio);
+						styleLayerBySector(layer, causa, type);
+			}
+			if (type == "tasa"){
+				updateLayerQuery(layer, type);
+				styleLayerBySector(layer, anio, type);
+			}
+			updateLegend(type);
+		});
+
+		$("input[name=group2]").click(function() {
+			causa = $(this).val();
+			if (type == "causa"){
+				updateLayerQuery(layer, type, anio);
+				styleLayerBySector(layer, causa, type);
+			}
+			if (type == "tasa"){
+				updateLayerQuery(layer, type);
+				styleLayerBySector(layer, anio, type);
+			}
+		});
+
+        layer = new google.maps.FusionTablesLayer();
+        updateLayerQuery(layer, type);
+        layer.setMap(map);
+
+        createLegend(map, type);
+        styleLayerBySector(layer, anio, type);
+        styleMap(map);
+        //drawVisualization('Alameda');	
+		
+		google.maps.event.addListener(layer, 'click', function(e) {
+			//aca configuramos lo que mostramos a la derecha y el dialogo
+			var provincia = e.row["provincia"].value
+			var tasa = e.row[$( "#anio" ).val()].value;
+            e.infoWindowHtml = "<label>Tasa de mortalidad:</label><p>"+tasa+"</p><br /><a href='#' onclick='ProvinciaDetalle(\""+provincia+"\",\""+e.latLng.Xa+"\",\""+e.latLng.Ya+"\");'>detalle de provincia</a>";
+		});
+      }
+	  
+	  function updateLayerQuery(layer, type, anio) {			
+		if (type == "causa")
+		{
+			var where = "";
+			if (anio) {
+				where += " anio = '" + anio + "'";
+			}
+			
+			layer.setOptions({
+			  query: {
+				select: 'geometry',
+				from: '1u1_H_d5X6DaGQHsIewtDYev1dsL8HWDhjj-NTP0',
+				where: where
+			  }
+			});
+		}
+        if (type == "tasa")
+		{
+			layer.setOptions({
+			  query: {
+				select: 'kml',
+				from: '1X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ'				
+			  }
+			});
+		}		
+      }
+	  
+	  function ProvinciaDetalle(provincia, lat, lng)
+		{
+			updateLayerQuery(layer, "tasa");
+				
+			layer.e.setZoom(6);
+			layer.e.setCenter(new google.maps.LatLng(lat, lng));	
+			drawVisualization(provincia);
+			drawVisualizationCodMuer(provincia);
+			
+			return false;
+	 }
+	  
+
+      function createLegend(map, type) {
+        var legendWrapper = document.createElement('div');
+        legendWrapper.id = 'legendWrapper';
+        legendWrapper.index = 1;
+        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
+            legendWrapper);
+        legendContent(legendWrapper, type);
+      }
+	  
+	  function updateLegend(type) {
+		var legendWrapper = $("#legendWrapper");
+		legendWrapper.empty();
+        legendContent(legendWrapper, type);
+      }
+
+      function legendContent(legendWrapper, type) {
+	    var sector = type;
+        var legend = document.createElement('div');
+        legend.id = 'legend';
+
+        var title = document.createElement('p');
+        title.innerHTML = sector;
+        legend.appendChild(title);
+
+        var layerStyle = LAYER_STYLES[sector];
+        var colors = layerStyle.colors;
+        var minNum = layerStyle.min;
+        var maxNum = layerStyle.max;
+        var step = (maxNum - minNum) / colors.length;
+        for (var i = 0; i < colors.length; i++) {
+          var legendItem = document.createElement('div');
+
+          var color = document.createElement('div');
+          color.setAttribute('class', 'color');
+          color.style.backgroundColor = colors[i];
+          legendItem.appendChild(color);
+
+          var newMin = minNum + step * i;
+          var newMax = newMin + step;
+          var minMax = document.createElement('span');
+          minMax.innerHTML = newMin + ' - ' + newMax;
+          legendItem.appendChild(minMax);
+
+          legend.appendChild(legendItem);
+        }
+
+        legendWrapper.appendChild(legend);
+      }
+
+      function updateLegend(sector) {
+        var legendWrapper = document.getElementById('legendWrapper');
+        var legend = document.getElementById('legend');
+        legendWrapper.removeChild(legend);
+        legendContent(legendWrapper, sector);
+      }
+
+      function styleLayerBySector(layer, anio, type) {
+        var layerStyle = LAYER_STYLES[type];
+        var colors = layerStyle.colors;
+        var minNum = layerStyle.min;
+        var maxNum = layerStyle.max;
+        var step = (maxNum - minNum) / colors.length;
+
+        var styles = new Array();
+        for (var i = 0; i < colors.length; i++) {
+          var newMin = minNum + step * i;
+          styles.push({
+            where: generateWhere(newMin, anio),
+            polygonOptions: {
+              fillColor: colors[i],
+              fillOpacity: 1
+            }
+          });
+        }
+        layer.set('styles', styles);
+      }
+
+      function generateWhere(minNum, column) {
+        var whereClause = new Array();
+        whereClause.push("'");
+		whereClause.push(column);
+        whereClause.push("' >= ");
+        whereClause.push(minNum);
+        return whereClause.join('');
+      }
+
+      function styleMap(map) {
+        var style = [{
+          featureType: 'all',
+          stylers: [{
+            saturation: -99
+          }]
+        }, {
+          featureType: 'poi',
+          stylers: [{
+            visibility: 'off'
+          }]
+        }, {
+          featureType: 'road',
+          stylers: [{
+            visibility: 'off'
+          }]
+        }];
+
+        var styledMapType = new google.maps.StyledMapType(style, {
+          map: map,
+          name: 'Styled Map'
+        });
+        map.mapTypes.set('map-style', styledMapType);
+        map.setMapTypeId('map-style');
+      }
+	  
+	  function drawVisualization(provincia) {
+        google.visualization.drawChart({
+          containerId: "visualization",
+          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+          query: "SELECT provincia,'2006','2007','2008','2009','2010' " +
+              "FROM 1X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ WHERE provincia = '" + provincia + "'",
+          chartType: "ColumnChart",
+          options: {
+            title: provincia,
+            height: 400,
+            width: 400
+          }
+        });
+      }
+	  
+	  function drawVisualizationCodMuer(provincia) {
+			var tablename = "";
+			if ($( "#anio" ).val() == "2010")
+			{
+				tablename = "1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk";
+			}
+			if ($( "#anio" ).val() == "2009")
+			{
+				tablename = "1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk";
+			}
+			if ($( "#anio" ).val() == "2008")
+			{
+				tablename = "1AUODHy9FzxuXrdA6XFneBsAnglRNUnbAilkuGuU";
+			}
+			if ($( "#anio" ).val() == "2007")
+			{
+				tablename = "1oii1zpRYUyYyn5ux1GTzLjXJpOBYL44XQR3bLhw";
+			}
+			if ($( "#anio" ).val() == "2006")
+			{
+				tablename = "1i9UlJDDVcjYz8oWwTY-_6ZXW64QO2TOzvLmn8m4";
+			}
+			
+	  
+			google.visualization.drawChart({
+			   containerId: "visualization2",
+			   dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+			   query:"SELECT  CODMUER, count() FROM " + tablename + " WHERE OCURRENCIA contains ignoring case '"+ provincia + "' GROUP BY CODMUER" ,
+			   refreshInterval: 5,
+			   chartType: "PieChart",
+			   options: {
+				  alternatingRowStyle: true,
+				  showRowNumber : true,
+				  title: provincia,
+				  height: 800,
+                  width: 600
+			   }
+			});
+		}
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="visualization"></div>
+	<div id="map-canvas"></div>
+    <form>
+		
+			<label for="anio">A&#241;o:</label>
+			<input type="text" id="anio" style="border:0; color:#f6931f; font-weight:bold;" />
+			<div id="slider" style="width: 200px;"></div>
+			<ul>
+				<li>					
+					<input type="radio" name="group1" value="tasa" checked> Por Tasa
+				</li>
+				<li>
+					<input type="radio" name="group1" value="causa"> Por Causa
+					<ul>
+						<li>
+							<input type="radio" name="group2" value="Aborto_P" checked> Aborto							
+						</li>
+						<li>							
+							<input type="radio" name="group2" value="T_Hipert_P"> T Hipert							
+						</li>
+						<li>
+							<input type="radio" name="group2" value="T_Placenta_P"> T Placenta							
+						</li>
+						<li>							
+							<input type="radio" name="group2" value="Otras_directas_P"> Otras  directas							
+						</li>
+						<li>
+							<input type="radio" name="group2" value="Hemorragia_post_P"> Hemorragia post							
+						</li>
+						<li>							
+							<input type="radio" name="group2" value="Sepsis_y_O_P"> Sepsis y  O							
+						</li>
+						<li>
+							<input type="radio" name="group2" value="Enf_por_VIH_P"> Enf por VIH							
+						</li>
+						<li>
+							<input type="radio" name="group2" value="Otras_ind_P"> Otras ind							
+						</li>						
+					</ul>					
+				</li>
+			</ul>
+			
+			
+			
+		
+		
+    </form>
+	<div id="visualization2"></div>
+  </body>
+</html>

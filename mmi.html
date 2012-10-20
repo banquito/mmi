@@ -1,0 +1,180 @@
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Google Maps JavaScript API v3 Example: Fusion Tables Layer</title>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<link type="text/css" href="css/smoothness/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
+	
+	<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclusterer/1.0/src/markerclusterer.js"></script>
+	<script type="text/javascript">
+      var script = '<script type="text/javascript" src="src/markerclusterer';
+      if (document.location.search.indexOf('compiled') !== -1) {
+        script += '_compiled';
+      }
+      script += '.js"><' + '/script>';
+      document.write(script);
+    </script>
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		
+		#map-container {
+        padding: 6px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ccc #ccc #999 #ccc;
+        -webkit-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        -moz-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
+        width: 600px;
+      }
+
+		#map_canvas {
+			height: 100%;
+		}
+
+		@media print {
+			html, body {
+				height: auto;
+			}		
+
+			#map_canvas {
+				height: 650px;
+			}
+		}
+	</style>
+    <script>
+		var map = null;
+		$(document).ready(function() {
+			showLayer2010();
+			$( "#anio" ).val( "2010" );
+			
+			$( "#slider" ).slider({
+				value:300,
+				min: 0,
+				max: 300,
+				step: 100,
+				slide: function( event, ui ) {
+					if (ui.value == 300)
+					{
+						$( "#anio" ).val( "2010" );
+						showLayer2010();						
+					}
+					if (ui.value == 200)
+					{
+						$( "#anio" ).val( "2008" );
+						showLayer2008();
+					}	
+					if (ui.value == 100)
+					{
+						$( "#anio" ).val( "2007" );
+						showLayer2007();
+					}	
+					if (ui.value == 0)
+					{
+						$( "#anio" ).val( "2006" );
+						showLayer2006();
+					}						
+				}
+			});
+		});
+		
+		
+		function showMapa(table, tipo, zoom)
+		{
+			var argentina = new google.maps.LatLng(-38.416097, -63.616672);
+
+			map = new google.maps.Map(document.getElementById('map_canvas'), {
+			  center: argentina,
+			  zoom: zoom,
+			  mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+			
+			showDiviciones(map, tipo)
+			
+			layerOcurrencia = new google.maps.FusionTablesLayer({
+			  query: {
+				select: 'OCURRENCIA', 
+				from:  table
+			  }
+			});
+			layerOcurrencia.setMap(map);
+			
+			google.maps.event.addListener(map, 'zoom_changed', function() {
+					var zoomLevel = map.getZoom();
+					if (zoomLevel > 7)
+					{
+						showMapa(table, "D", zoomLevel)
+					}
+					else
+					{
+						showMapa(table, "P", zoomLevel)
+					}					
+			});
+		}
+		
+		function showDiviciones(map, tipo)
+		{
+			if (tipo == "P"){
+				layerProvincia = new google.maps.FusionTablesLayer({
+					heatmap: { enabled: false },
+					query: {
+						select: 'KML', 
+						from: '1keepH8XYHg66gIeKQlTY4SPEG-T01pVfQ30R5Do'
+					}
+				});
+				layerProvincia.setMap(map);
+			}
+			if (tipo == "D"){
+				layerDepartamento = new google.maps.FusionTablesLayer({
+					heatmap: { enabled: false },
+					query: {
+						select: 'KML', 
+						from: '1hR1lXT5d8LrZhKvnWlIJhIk4T8OVpZugn9t-DlA'
+					}
+				});
+				layerDepartamento.setMap(map);
+			}
+		}
+		
+	
+
+		function showLayer2010()
+		{
+			showMapa('1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk', 'P', 4)
+		}
+		
+		function showLayer2008()
+		{	
+			showMapa('1AUODHy9FzxuXrdA6XFneBsAnglRNUnbAilkuGuU', 'P', 4);
+		}
+		
+		function showLayer2007()
+		{	
+			showMapa('1oii1zpRYUyYyn5ux1GTzLjXJpOBYL44XQR3bLhw', 'P', 4);				
+		}
+		
+		function showLayer2006()
+		{	
+			showMapa('1i9UlJDDVcjYz8oWwTY-_6ZXW64QO2TOzvLmn8m4', 'P', 4);				
+		}
+	
+	
+    </script>
+  </head>
+  <body>
+    <p>
+	<label for="anio">A&#241;o:</label>
+	<input type="text" id="anio" style="border:0; color:#f6931f; font-weight:bold;" />
+	</p>
+	<div id="slider" style="width: 200px;"></div>
+	<br/>
+	<div id="map_canvas"></div>
+  </body>
+</html>

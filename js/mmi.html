@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Google Maps JavaScript API v3 Example: Fusion Tables Layer</title>
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+	<link type="text/css" href="css/smoothness/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
+	<script type="text/javascript">
+      var script = '<script type="text/javascript" src="src/markerclusterer';
+      if (document.location.search.indexOf('compiled') !== -1) {
+        script += '_compiled';
+      }
+      script += '.js"><' + '/script>';
+      document.write(script);
+    </script>
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		
+		#map-container {
+        padding: 6px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ccc #ccc #999 #ccc;
+        -webkit-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        -moz-box-shadow: rgba(64, 64, 64, 0.5) 0 2px 5px;
+        box-shadow: rgba(64, 64, 64, 0.1) 0 2px 5px;
+        width: 600px;
+      }
+
+		#map_canvas {
+			height: 100%;
+		}
+
+		@media print {
+			html, body {
+				height: auto;
+			}		
+
+			#map_canvas {
+				height: 650px;
+			}
+		}
+	</style>
+    <script>
+	
+		$(function() {
+			$( "#slider" ).slider({
+				value:100,
+				min: 0,
+				max: 500,
+				step: 100,
+				slide: function( event, ui ) {
+					alert(ui.value);
+					$( "#amount" ).val( "$" + ui.value );
+				}
+			});
+			$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
+		});
+
+      function initialize() {
+
+        var argentina = new google.maps.LatLng(-38.416097, -63.616672);
+
+        map = new google.maps.Map(document.getElementById('map_canvas'), {
+          center: argentina,
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+		
+		
+
+		
+		layer2 = new google.maps.FusionTablesLayer({
+		heatmap: { enabled: false },
+          query: {
+            select: 'KML', 
+            from: '1hR1lXT5d8LrZhKvnWlIJhIk4T8OVpZugn9t-DlA'
+          }
+        });
+        layer2.setMap(map);
+		
+		layerResi = new google.maps.FusionTablesLayer({
+		heatmap: { enabled: false },
+          query: {
+            select: 'RESIDENCIA', 
+            from: '1ud8XGy5DnIFW5PmzWZBQQgqkEWUguCEUOP30ylk'
+          },
+		  styles: [{
+			markerOptions: {
+			iconName: "small_yellow"
+			}
+			}]
+        });
+        layerResi.setMap(map);
+
+        layerOcu = new google.maps.FusionTablesLayer({
+          query: {
+            select: 'OCURRENCIA', 
+            from: '1ud8XGy5DnIFW5PmzWZBQQgqkEWUguCEUOP30ylk'
+          }
+        });
+        layerOcu.setMap(map);
+		
+		google.maps.event.addListener(layerOcu, 'click', function(e) {
+  
+			alert("hola");
+    
+		}); 
+      }
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="slider"></div>
+	<div id="map_canvas"></div>
+  </body>
+</html>
