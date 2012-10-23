@@ -33,26 +33,87 @@
       
 	  var layer = null;
       function initialize() {
-		drawVisualizationTablaTasa();
+		drawVisualizationBarChart();
       }
 	  
 	  function drawVisualizationTablaTasa() {
-        google.visualization.drawChart({
+       google.visualization.drawChart({
           containerId: "visualization-tabla",
           dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT atenmed, count() " +
-              "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
-			  "WHERE anio = '2010' and residencia contains ignoring case 'Buenos Aires' " +
-			  "group by atenmed	",
-          chartType: "PieChart",
+          query: "SELECT 'provincia', '2006','2007','2008','2009','2010' " +
+              "FROM 1X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ",
+          chartType: "LineChart",
           options: {
-            title: "Atencion Medica ",
+            title: "Causas Totales por año",
             height: 400,
-            width: 400
-          }        
-	  });
+            width: 400,
+			animation:{
+				duration: 10000,
+				easing: 'linear'
+			}	
+          }
+        });
       }
+	  
+	function drawVisualizationBarChart(){
+		
+		 
+		/*data.addColumn('string', 'Anio');				
+		data.addColumn('string', '0');
+		data.addColumn('string', '10');
+		data.addColumn('string', '15');
+		data.addColumn('string', '20');
+		data.addColumn('string', '25');
+		data.addColumn('string', '30');
+		data.addColumn('string', '35');
+		data.addColumn('string', '40');
+		data.addColumn('string', '45');
+		data.addColumn('string', '50');
+		data.addColumn('string', '55');*/
 
+		  // Add empty rows
+		
+
+//$spans.eq(3).text(jQuery.inArray("Pete", arr, 2));
+		
+		$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20'provincia','2006','2007','2008','2009','2010'%20FROM%201X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
+			var datatable = new google.visualization.DataTable();
+			var columns = ["Ciud. Aut. de Buenos Aires", "Buenos Aires", "Catamarca", "Cordoba", "Corrientes", "Chaco", "Chubut", "Entre Rios", "Formosa", "Jujuy", "La Pampa", "La Rioja", "Mendoza", "Misiones", "Neuquen", "Rio Negro", "Salta", "San Juan", "San Luis", "Santa Cruz", "Santa Fe", "Santiago del Estero", "Tucuman", "Tierra del Fuego"];
+			var rows = [ "2006", "2007", "2008", "2009", "2010"];
+			datatable.addColumn("string", "Anio");
+ 			$.each(columns, function(key, columnName) {
+					datatable.addColumn("number", columnName);
+			});	
+			datatable.addRows(5);
+			$.each(data.rows, function(key, row) {
+				datatable.setCell(jQuery.inArray('2006', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[1]));
+				datatable.setCell(jQuery.inArray('2007', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[2]));
+				datatable.setCell(jQuery.inArray('2008', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[3]));
+				datatable.setCell(jQuery.inArray('2009', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[4]));
+				datatable.setCell(jQuery.inArray('2010', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[5]));
+				/*if (row[0] = "2006")
+					datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), ((parseInt(row[2])*100)/97));
+				if (row[0] = "2007")
+					datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), ((parseInt(row[2])*100)/97));
+				if (row[0] = "2008")
+					datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), ((parseInt(row[2])*100)/89));
+				if (row[0] = "2010")
+					datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), ((parseInt(row[2])*100)/130));*/
+			});
+			
+			var options = {			
+				height: 500,
+				width: 700,
+			};
+			
+			var chart = new google.visualization.LineChart(document.getElementById('visualization-tabla'));
+			chart.draw(datatable, options);
+		});
+		
+	
+	}
+	  
+	 //
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>

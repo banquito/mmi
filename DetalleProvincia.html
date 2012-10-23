@@ -69,6 +69,22 @@
       .high, .medium, .low {
         font-weight: bold;
       }
+      
+      .brand { 
+        font-weight:600;
+        color:#056B74;
+        font-family:  verdana, sans-serif;
+      }
+    
+    h3
+    {font-size:18px;
+     line-height:50px;
+     font-weight:600;
+     color:#0B3B39;
+     font-family:  verdana, sans-serif;
+     } 
+      
+      
     </style>
 
     <script type="text/javascript">
@@ -113,41 +129,45 @@
 		var provincia2 = "";
 		var map
 		var map2
-		var geocoder = new google.maps.Geocoder();
-		geocoder.geocode({ 'address': "Argentina," + provincia}, function(results,status){
-			var latitude = results[0].geometry.location.lat();
-			var longitude = results[0].geometry.location.lng();
-			
-			var map = new google.maps.Map(document.getElementById('map-canvas'), {
-			  center: new google.maps.LatLng(latitude, longitude),
-			  zoom: 6,
-			  mapTypeId: google.maps.MapTypeId.ROADMAP,
-			  zoomControlOptions: {
-				style: google.maps.ZoomControlStyle.SMALL
-			  },
+		$("#provincia11").val(provincia);
+		
+		function setProvincia()
+		{
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({ 'address': "Argentina," + provincia}, function(results,status){
+				var latitude = results[0].geometry.location.lat();
+				var longitude = results[0].geometry.location.lng();
+				
+				var map = new google.maps.Map(document.getElementById('map-canvas'), {
+				  center: new google.maps.LatLng(latitude, longitude),
+				  zoom: 6,
+				  mapTypeId: google.maps.MapTypeId.ROADMAP,
+				  zoomControlOptions: {
+					style: google.maps.ZoomControlStyle.SMALL
+				  },
+				});
+				
+				layerDep = new google.maps.FusionTablesLayer();
+				drawLayerDepartamentos(layerDep, provincia);
+				layerDep.setMap(map);
+				
+				layer = new google.maps.FusionTablesLayer();
+				updateLayerQuery(layer, type, anio, provincia);
+				layer.setMap(map);
+
+				createLegend(map, type);
+				styleLayerBySector(layer, type);
+				styleMap(map);
+				drawVisualizationCoverturaMedica(anio, provincia)
+				drawVisualizationAtencionMedica(anio, provincia)
+				drawVisualizationDondeOcurrio(anio, provincia)
+				drawVisualizationNivelInstruccion(anio, provincia)
+				drawVisualizationEdad(anio, provincia)
+
 			});
-			
-			layerDep = new google.maps.FusionTablesLayer();
-			drawLayerDepartamentos(layerDep, provincia);
-			layerDep.setMap(map);
-			
-			layer = new google.maps.FusionTablesLayer();
-			updateLayerQuery(layer, type, anio, provincia);
-			layer.setMap(map);
-
-			createLegend(map, type);
-			styleLayerBySector(layer, type);
-			styleMap(map);
-			drawVisualizationCoverturaMedica(anio, provincia)
-			drawVisualizationAtencionMedica(anio, provincia)
-			drawVisualizationDondeOcurrio(anio, provincia)
-			drawVisualizationNivelInstruccion(anio, provincia)
-			drawVisualizationEdad(anio, provincia)
-
-		});
-		
-		
-		
+		}
+		setProvincia();
+				
 		$( "#anio" ).text( "2010" );
 		
 		$( "#slider" ).slider({
@@ -175,45 +195,10 @@
 			styleLayerBySector(layer, type);
 		});
 		
-		/*$("#provincia1").change(function () {
-			$("#comparador").show();
-			provincia2 = $("#provincia1").val();
-			var geocoder = new google.maps.Geocoder();
-			geocoder.geocode({ 'address': "Argentina," + provincia2}, function(results,status){
-				var latitude = results[0].geometry.location.lat();
-				var longitude = results[0].geometry.location.lng();
-				
-				var map2 = new google.maps.Map(document.getElementById('map-canvas2'), {
-				  center: new google.maps.LatLng(latitude, longitude),
-				  zoom: 6,
-				  mapTypeId: google.maps.MapTypeId.ROADMAP,
-				  zoomControlOptions: {
-					style: google.maps.ZoomControlStyle.SMALL
-				  },
-				});
-				
-				layerDep = new google.maps.FusionTablesLayer();
-				drawLayerDepartamentos(layerDep, provincia);
-				layerDep.setMap(map2);
-				
-				layer = new google.maps.FusionTablesLayer();
-				updateLayerQuery(layer, type, anio, provincia);
-				layer.setMap(map2);
-
-				createLegend(map2, type);
-				styleLayerBySector(layer, type);
-				styleMap(map2);
-			});
-		});*/
-		
-				/*drawVisualizationTablaTasa(anio);
-		
-		google.maps.event.addListener(layer, 'click', function(e) {
-			//aca configuramos lo que mostramos a la derecha y el dialogo
-			var provincia = e.row["provincia"].value
-			var tasa = e.row[$( "#anio" ).text()].value;
-            e.infoWindowHtml = "<label>Tasa de mortalidad:</label><p>"+tasa+"</p><br /><a href='#' onclick='ProvinciaDetalle(\""+provincia+"\",\""+e.latLng.Xa+"\",\""+e.latLng.Ya+"\");'>detalle de provincia</a>";
-		});*/
+		$("#provincia11").change(function () {
+			provincia = $("#provincia11").val();
+			setProvincia();
+		});
       }
 	  
 	  function drawLayerDepartamentos(layerDep, provincia)
@@ -480,37 +465,56 @@
       }
 	  
 	  function drawVisualizationNivelInstruccion(anio, provincia) {
-        google.visualization.drawChart({
-          containerId: "visualization-ni",
-          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT finstruc, count() " +
-              "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
-			  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
-			  "group by finstruc	",
-          chartType: "PieChart",
-          options: {
-            title: "Nivel de Instruccion",
-            height: 220,
-            width: 300
-          }
-        });
+		$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20anio,%20finstruc,%20count()%20as%20count%20FROM%201ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM%20WHERE%20residencia%20contains%20ignoring%20case%20\'"+provincia+"\'%20group%20by%20finstruc,%20anio&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
+			var datatable = new google.visualization.DataTable();
+			var columns = ["0", "1", "2", "3", "4", "5", "6", "7", "9", "11", "12", "13", "14", "99" ];
+			var rows = [ "2006", "2007", "2008", "2009", "2010"];
+			datatable.addColumn("string", "Anio");
+ 			$.each(columns, function(key, columnName) {
+					datatable.addColumn("number", columnName);
+			});	
+			datatable.addRows(5);
+			$.each(data.rows, function(key, row) {
+				datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), parseInt(row[2]));			
+			});
+			
+			var options = {
+				hAxis: {title: 'Anio',  titleTextStyle: {color: 'red'}},
+				isStacked:true,
+				height: 350,
+				width: 220,
+				title: "Nivel de instruccion"
+			};
+			
+			var chart = new google.visualization.ColumnChart(document.getElementById('visualization-ni'));
+			chart.draw(datatable, options);
+		});
       }
 	  
 	  function drawVisualizationEdad(anio, provincia) {
-        google.visualization.drawChart({
-          containerId: "visualization-e",
-          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT grupedad, count() " +
-              "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
-			  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
-			  "group by grupedad	",
-          chartType: "PieChart",
-          options: {
-            title: "Edad",
-            height: 220,
-            width: 300
-          }
-        });
+		$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20anio,%20grupedad,%20count()%20as%20count%20FROM%201ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM%20WHERE%20residencia%20contains%20ignoring%20case%20\'"+provincia+"\'%20group%20by%20grupedad,%20anio&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
+			var datatable = new google.visualization.DataTable();
+			var columns = ["0", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55" ];
+			var rows = [ "2006", "2007", "2008", "2009", "2010"];
+			datatable.addColumn("string", "Anio");
+			$.each(columns, function(key, columnName) {
+					datatable.addColumn("number", columnName);
+			});	
+			datatable.addRows(5);
+			$.each(data.rows, function(key, row) {
+				datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), parseInt(row[2]));				
+			});
+			
+			var options = {				
+				isStacked:true,
+				height: 350,
+				width: 220,
+				title: "Edad"
+			};
+			
+			var chart = new google.visualization.ColumnChart(document.getElementById('visualization-e'));
+			chart.draw(datatable, options);
+		});	
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
@@ -520,7 +524,7 @@
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-			  <a class="brand" href="#">MMI</a>			 
+			  <a class="brand" href="#">las.mujeres.cuentan</a>			 
 			  <div class="nav-collapse collapse">
 				<ul class="nav">
 					<li><a href="Home.html">Home</a></li>
@@ -536,22 +540,63 @@
 		</div>
 	</div>
 	<div class="container-fluid">
-		<div class="row-fluid">
-			<div class="span2" >
+		        <div class="row-fluid">
+				<h3>detalle provincial</h3>
+
+            <p class="text-info">	La distribucion de las muertes maternas var’a mucho de provincia en provincia, de hecho el Objetivo del Milenio, en su cap&iacute;tulo local, incorpor&oacute; el objetivo concreto de disminuir en un 10% la brecha existente entre las provincias, con respecto a los &iacute;ndices resultantes del a&ntilde;o 1990. Mientras que la media es 4.4%, la provincia de Mendoza tiene una tasa de la muerte materna para el 2010 de  x. Existen tambi&eacute;n variaciones locales en la muerte materna hacia adentro de cada provincia, que se pueden ver en el mapa, al observar las diferencias en los  datos departamentales. Los gr&aacute;ficos de la derecha contextualizan esta vista detalle a nivel  departamentos con informaci&oacute;n adicional de tipo socioecon&oacute;mico para la provincia.</p>
+<div class="span2" >
+
 				<form>					
-					<h5><abbr title="bla bla bla bla bla bla bla bla bla bla bla bla">A&#241;o:</abbr></h5>					
-					<span id="anio" class="label label-info"></span>
-					<div id="slider" style="width: 200px;"></div>
-					<h5><abbr title="bla bla bla bla bla bla bla bla bla bla bla bla">General:</abbr></h5>
+				
+                    <h5><abbr title="Sobre el mapa se ilustran seg&uacute;n la escala de la leyenda los datos departamentales de muerte materna por ocurrencia, por residencia y la proporci&oacute;n de muertes con residencia en el departamento sobre el total provincial. Elija el a&ntilde;o sobre el cual quiere conocer los datos. Para comparar, se puede seleccionar una segunda provincia. Los gr&aacute;ficos a la derecha agregan informaci&oacute;n de contexto correspondientes a toda la provincia.">Visualizaciones</abbr></h5>					
+					<!--span id="anio" class="label label-info"></span>
+					<div id="slider" style="width: 200px;"></div!-->
+					<h5><abbr title="nada x ahora">Datos por departamento:</abbr></h5>
 					<ul>
 						<li>					
-							<input type="radio" name="group1" value="residencia" checked> Por Residencias
+							<input type="radio" name="group1" value="proporcional" checked><abbr title="Este valor representa la relaci&oacute;n porcentual entre las muertes maternas con residencia en este departamento y la totalidad de muertes maternas de toda la provincia. La leyenda aclara los valores de los matices."> Proporci&oacute;n de muertes maternas en el departamento 	</abbr></li>
+                        <li>					
+							<input type="radio" name="group1" value="residencia" checked><abbr title="Es el n&uacute;mero de muertes maternas con residencia en este departamento."> Cantidad de muertes por residencia</abbr>	
 						</li>
 						<li>					
-							<input type="radio" name="group1" value="ocurrencia"> Por Ocurrencias
+							<input type="radio" name="group1" value="ocurrencia"> <abbr title="Es el n&uacute;mero de muertes maternas que ocurrieron en este departamento.">Cantidad de muertes por ocurrencia</abbr>
 						</li>
-					</ul>					
-					<h5><abbr title="bla bla bla bla bla bla bla bla bla bla bla bla">Comparar:</abbr></h5>
+					</ul>	
+                    <h5><abbr title="Elija el a&ntilde;o sobre el cual quiere conocer los datos">A&ntilde;o</abbr></h5>					
+					<span id="anio" class="label label-info"></span>
+					<div id="slider" style="width: 200px;"></div>
+                    
+                    <!--agrego este bloque para cambiar de provincia a visualizar, como id le puse "11" en vez de "1"!-->
+                     <h5><abbr title="Seleccione del men&uacute; la provincia a visualizar, puede cambiar de provincia">Elegir provincia:</abbr></h5>
+					<select id="provincia11">
+						<option value="-1">-- Seleccionar --</option>
+						<option value="Buenos Aires">Buenos Aires</option>
+						<option value="Buenos Aires Capital">Capital Federal</option>
+						<option value="Catamarca">Catamarca</option>
+						<option value="Chaco">Chaco</option>
+						<option value="Chubut">Chubut</option>
+						<option value="Cordoba">Cordoba</option>
+						<option value="Corrientes">Corrientes</option>
+						<option value="Entre Rios">Entre Rios</option>
+						<option value="Formosa">Formosa</option>
+						<option value="Jujuy">Jujuy</option>
+						<option value="La Pampa">La Pampa</option>
+						<option value="La Rioja">La Rioja</option>
+						<option value="Mendoza">Mendoza</option>
+						<option value="Misiones">Misiones</option>
+						<option value="Neuquen">Neuquen</option>
+						<option value="Rio Negro">Rio Negro</option>
+						<option value="Salta">Salta</option>
+						<option value="San Juan">San Juan</option>
+						<option value="San Luis">San Luis</option>
+						<option value="Santa Cruz">Santa Cruz</option>
+						<option value="Santa Fe">Santa Fe</option>
+						<option value="Santiago del Estero">Santiago del Estero</option>
+						<option value="Tierra del Fuego">Tierra del Fuego</option>
+						<option value="Tucuman">Tucuman</option>
+					</select>                               
+                                                                    				
+					<h5><abbr title="Seleccione del men&uacute; una provincia para comparar con la provincia que ya est&aacute; visualizando">comparar con:</abbr></h5>
 					<select id="provincia1">
 						<option value="-1">-- Seleccionar --</option>
 						<option value="Buenos Aires">Buenos Aires</option>
@@ -582,8 +627,8 @@
 				</form>
 			</div>
 			<div class="span5"><div id="map-canvas"></div></div>
-			<div class="span2"><div id="visualization-cm"></div><div id="visualization-am"></div><div id="visualization-e"></div></div>
-			<div class="span2"><div id="visualization-do"></div><div id="visualization-ni"></div></div>
+			<div class="span2"><div id="visualization-cm"></div><div id="visualization-am"></div><div id="visualization-do"></div></div>
+			<div class="span2"><div id="visualization-e"></div><div id="visualization-ni"></div></div>
 		
 			
 		</div>

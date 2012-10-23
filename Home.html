@@ -30,7 +30,7 @@
         background: #FFF;
         margin: 10px;
         padding: 5px;
-        width: 150px;
+        width: 80px;
       }
 
       #legend p {
@@ -64,7 +64,22 @@
 
       .high, .medium, .low {
         font-weight: bold;
+     }
+      
+       .brand { 
+        font-weight:600;
+        color:#056B74;
+        font-family:  verdana, sans-serif;
       }
+    
+    h3
+    {font-size:18px;
+     line-height:50px;
+     font-weight:600;
+     color:#0B3B39;
+     font-family:  verdana, sans-serif;
+     } 
+   
     </style>
 
     <script type="text/javascript">
@@ -143,13 +158,16 @@
 				styleLayerBySector(layer, anio, type);
 				updateLegend(type);
 				drawVisualizationTablaTasa(anio);
-				$("#visualization").empty();				
+				$("#visualization").empty();	
+				drawVisualizationTasasProvincias();
+				$("#visualization2").empty();					
 			}else{
 				updateLayerQuery(layer, "causa", anio);
 				styleLayerBySector(layer, type, "causa");
 				updateLegend("causa");
-				drawVisualizationCausas(anio)
-				drawVisualizationTabla(anio)
+				drawVisualizationCausas(anio);
+				drawVisualizationCausasTotales();
+				drawVisualizationTabla(anio);
 			}
 		});
 		
@@ -166,6 +184,7 @@
         createLegend(map, type);
         styleLayerBySector(layer, anio, type);
         styleMap(map);
+		drawVisualizationTasasProvincias();
 		drawVisualizationTablaTasa(anio);
 		
 		google.maps.event.addListener(layer, 'click', function(e) {
@@ -363,6 +382,35 @@
         map.setMapTypeId('map-style');
       }
 	  
+	  function drawVisualizationTasasProvincias()
+	  {
+		$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20'provincia','2006','2007','2008','2009','2010'%20FROM%201X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
+			var datatable = new google.visualization.DataTable();
+			var columns = ["Ciud. Aut. de Buenos Aires", "Buenos Aires", "Catamarca", "Cordoba", "Corrientes", "Chaco", "Chubut", "Entre Rios", "Formosa", "Jujuy", "La Pampa", "La Rioja", "Mendoza", "Misiones", "Neuquen", "Rio Negro", "Salta", "San Juan", "San Luis", "Santa Cruz", "Santa Fe", "Santiago del Estero", "Tucuman", "Tierra del Fuego"];
+			var rows = [ "2006", "2007", "2008", "2009", "2010"];
+			datatable.addColumn("string", "Anio");
+ 			$.each(columns, function(key, columnName) {
+					datatable.addColumn("number", columnName);
+			});	
+			datatable.addRows(5);
+			$.each(data.rows, function(key, row) {
+				datatable.setCell(jQuery.inArray('2006', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[1]));
+				datatable.setCell(jQuery.inArray('2007', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[2]));
+				datatable.setCell(jQuery.inArray('2008', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[3]));
+				datatable.setCell(jQuery.inArray('2009', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[4]));
+				datatable.setCell(jQuery.inArray('2010', rows), (jQuery.inArray(row[0], columns)+1), parseFloat(row[5]));				
+			});
+			
+			var options = {			
+				height: 500,
+				width: 700,
+			};
+			
+			var chart = new google.visualization.LineChart(document.getElementById('visualization'));
+			chart.draw(datatable, options);
+		});
+	  }
+	  
 	  function drawVisualizationCausas(anio) {
         google.visualization.drawChart({
           containerId: "visualization",
@@ -372,8 +420,8 @@
           chartType: "ColumnChart",
           options: {
             title: "Causas " + anio,
-            height: 400,
-            width: 400,
+            height: 300,
+            width: 300,
 			animation:{
 				duration: 10000,
 				easing: 'linear'
@@ -382,6 +430,26 @@
         });
       }
 	  
+	  function drawVisualizationCausasTotales(){
+		google.visualization.drawChart({
+          containerId: "visualization2",
+          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+          query: "SELECT 'provincia', 'Aborto','T_Hipert','T_Placenta','Otras_directas','Hemorragia_post', 'Sepsis_y_O', 'Enf_por_VIH', 'Otras_ind' " +
+              "FROM 1hCiTDcyuaZaqzQ11roxhvvL8cmVdZZxoLnTXQS4 WHERE provincia = 'total'",
+          chartType: "ColumnChart",
+          options: {
+            title: "Causas Totales por año",
+            height: 400,
+            width: 400,
+			isStacked:true,
+			animation:{
+				duration: 10000,
+				easing: 'linear'
+			}	
+          }
+        });
+	  } 
+	 
 	  function drawVisualizationTabla(anio) {
         google.visualization.drawChart({
           containerId: "visualization-tabla",
@@ -474,15 +542,15 @@
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
-			  <a class="brand" href="#">MMI</a>			 
+			  <a class="brand" href="#">las.mujeres.cuentan</a>			 
 			  <div class="nav-collapse collapse">
 				<ul class="nav">
 					<li class="active"><a href="Home.html">Home</a></li>
 					<li><a href="DetalleProvincia.html">Detalle de provincia</a></li>
 					<li><a href="Nosotros.html">Sobre nosotros</a></li>
-					<li><a href="Problema.html">Cual es el problema?</a></li>
-					<li><a href="ProyectoYPorque.html">Sobre el proyecto y por que lo hacemos</a></li>				  
-					<li><a href="Apoyan.html">Quienes nos apoyan</a></li>
+					<li><a href="Problema.html">Cu&aacute;l es el problema?</a></li>
+					<li><a href="ProyectoYPorque.html">Sobre el proyecto y por qu&eacute; lo hacemos</a></li>				  
+					<li><a href="Apoyan.html">Qui&eacute;nes nos apoyan</a></li>
 					<li><a href="Contacto.html">Contacto</a></li>
 				</ul>
 			  </div>
@@ -491,49 +559,51 @@
 	</div>
 	<div class="container-fluid">
 		<div class="row-fluid">
-			<div class="span2" >
+<div class="span12">
+				<h3>plataforma de monitoreo de la mortalidad materna</h3>
+					<p class="text-info"><b class="brand">las.mujeres.cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como prop&oacutesito hacer p&uacuteblica la informaci&oacute;n reportada en las estad&iacutesticas oficiales, enriquecerla con informaci&oacute;n descriptiva y hacer un seguimiento de sus indicadores para brindar una visi&oacute;n m&aacute;s profunda del problema y en definitiva, buscar un futuro mejor para las mujeres de nuestro pa&iacute;s.</p>
+	<div class="span2" >
 				<form>
-					<p class="text-info">bla bla bla bla bla bla bla bla bla bla bla bla</br>bla bla bla bla bla bla bla bla bla bla bla bla</p>
-					<h5><abbr title="bla bla bla bla bla bla bla bla bla bla bla bla">A&#241;o:</abbr></h5>					
+					<h5><abbr title="Seleccione alguno de los indicadores y elija el a&ntilde;o sobre el cual quiere conocer los datos. El mapa mostrar&aacute; la distribuci&oacute;n de la informaci&oacute;n seleccionada a nivel provincial.">A&#241;o:</abbr></h5>					
 					<span id="anio" class="label label-info"></span>
 					<div id="slider" style="width: 200px;"></div>
-					<h5><abbr title="bla bla bla bla bla bla bla bla bla bla bla bla">General:</abbr></h5>
+					<h5><abbr title="Este valor representa la relaci&oacute;n entre las muertes maternas y la cantidad de nacidos vivos (10 mil). La leyenda de referencia al pie del mapa aclara los valores de los matices crom&aacute;ticos del mapa.">Visualizaciones:</abbr></h5>
 					<ul>
 						<li>					
-							<input type="radio" name="group1" value="tasa" checked> Por Tasa
+							<input type="radio" name="group1" value="tasa" checked> Tasa de mortalidad materna
 						</li>
 					</ul>					
-					<h5><abbr title="bla bla bla bla bla bla bla bla bla bla bla bla">Por Causas:</abbr></h5>
+					<h5><abbr title="Las muertes se producen por diversas causas pero en general reflejan fallas en el acceso de las mujeres al sistema de salud y al control durante el embarazo, y a los problemas causados por el aborto inseguro. En el mapa se puede ver la incidencia de las distintas causas en cada provincia del pa&iacute;s.">Grupo de causas de muerte:</abbr></h5>
 					<ul>
 						<li>
-							<input type="radio" name="group1" value="Aborto_P"> Aborto							
+							<input type="radio" name="group1" value="Aborto_P"> Embarazo terminado en aborto							
 						</li>
 						<li>							
-							<input type="radio" name="group1" value="T_Hipert_P"> T Hipert							
+							<input type="radio" name="group1" value="T_Hipert_P"> Trastornos hipertensivos							
 						</li>
 						<li>
-							<input type="radio" name="group1" value="T_Placenta_P"> T Placenta							
+							<input type="radio" name="group1" value="T_Placenta_P"> Trastornos de placenta y hemorragias							
 						</li>
 						<li>							
-							<input type="radio" name="group1" value="Otras_directas_P"> Otras  directas							
+							<input type="radio" name="group1" value="Otras_directas_P"> Otras causas directas							
 						</li>
 						<li>
-							<input type="radio" name="group1" value="Hemorragia_post_P"> Hemorragia post							
+							<input type="radio" name="group1" value="Hemorragia_post_P"> Hemorragia postparto							
 						</li>
 						<li>							
-							<input type="radio" name="group1" value="Sepsis_y_O_P"> Sepsis y  O							
+							<input type="radio" name="group1" value="Sepsis_y_O_P"> Sepsis							
 						</li>
 						<li>
-							<input type="radio" name="group1" value="Enf_por_VIH_P"> Enf por VIH							
+							<input type="radio" name="group1" value="Enf_por_VIH_P"> Enfermedad por V.I.H.							
 						</li>
 						<li>
-							<input type="radio" name="group1" value="Otras_ind_P"> Otras ind							
+							<input type="radio" name="group1" value="Otras_ind_P"> Otras causas indirectas							
 						</li>						
 					</ul>
 				</form>
 			</div>
-			<div class="span6"><div id="map-canvas"></div></div>
-			<div class="span2"><div id="visualization"></div></div>
+			<div class="span5"><div id="map-canvas"></div></div>
+			<div class="span3"><div id="visualization2"></div><div id="visualization"></div></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span2" >
