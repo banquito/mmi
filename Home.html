@@ -24,6 +24,7 @@
 	  
 	  #map-canvas {
         width: auto;
+		height:550px
       }
 
       #legend {
@@ -112,8 +113,97 @@
             '#cc0000',
             '#990000'
           ]
+        },
+		'Aborto_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#8181F7',
+            '#2E2EFE',
+            '#0101DF',
+            '#08088A',
+            '#0B0B3B'
+          ]
+        },
+		'T_Hipert_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#F6CECE',
+            '#F78181',
+            '#FE2E2E',
+            '#DF0101',
+            '#8A0808'
+          ]
+        },
+		'T_Placenta_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#F2F5A9',
+            '#F4FA58',
+            '#FFFF00',
+            '#D7DF01',
+            '#868A08'
+          ]
+        },
+		'Otras_directas_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#81F781',
+            '#58FA58',
+            '#01DF01',
+            '#088A08',
+            '#0B3B0B'
+          ]
+        },
+		'Hemorragia_post_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#F5A9E1',
+            '#FA58D0',
+            '#FF00BF',
+            '#B40486',
+            '#610B4B'
+          ]
+        },
+		'Sepsis_y_O_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#A9F5F2',
+            '#58FAF4',
+            '#00FFFF',
+            '#04B4AE',
+            '#0B615E'
+          ]
+        },
+		'Enf_por_VIH_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#F6CEF5',
+            '#F5A9F2',
+            '#FA58F4',
+            '#FF00FF',
+            '#B404AE'
+          ]
+        },
+		'Otras_ind_P': {
+          'min': 0,
+          'max': 100,
+          'colors': [
+            '#D0F5A9',
+            '#ACFA58',
+            '#80FF00',
+            '#5FB404',
+            '#38610B'
+          ]
         }
       }
+
 
 	  var layer = null;
       function initialize() {
@@ -144,7 +234,7 @@
 						drawVisualizationTablaTasa(anio);
 					}else{
 						updateLayerQuery(layer, "causa", anio);
-						styleLayerBySector(layer, type, "causa");
+						styleLayerBySector(layer, type, type);
 						drawVisualizationCausas(anio)
 						drawVisualizationTabla(anio)						
 					}					
@@ -163,8 +253,8 @@
 				$("#visualization2").empty();					
 			}else{
 				updateLayerQuery(layer, "causa", anio);
-				styleLayerBySector(layer, type, "causa");
-				updateLegend("causa");
+				styleLayerBySector(layer, type, type);
+				updateLegend(type);
 				drawVisualizationCausas(anio);
 				drawVisualizationCausasTotales();
 				drawVisualizationTabla(anio);
@@ -274,7 +364,7 @@
         var legendWrapper = document.createElement('div');
         legendWrapper.id = 'legendWrapper';
         legendWrapper.index = 1;
-        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
             legendWrapper);
         legendContent(legendWrapper, type);
       }
@@ -402,8 +492,8 @@
 			});
 			
 			var options = {			
-				height: 500,
-				width: 700,
+				height: 400,
+				width: 500,
 			};
 			
 			var chart = new google.visualization.LineChart(document.getElementById('visualization'));
@@ -415,7 +505,7 @@
         google.visualization.drawChart({
           containerId: "visualization",
           dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT 'provincia', 'Aborto','T_Hipert','T_Placenta','Otras_directas','Hemorragia_post', 'Sepsis_y_O', 'Enf_por_VIH', 'Otras_ind' " +
+          query: "SELECT 'provincia', 'Otras_ind', 'Enf_por_VIH', 'Sepsis_y_O', 'Hemorragia_post', 'Otras_directas', 'T_Placenta', 'T_Hipert', 'Aborto' " +
               "FROM 1hCiTDcyuaZaqzQ11roxhvvL8cmVdZZxoLnTXQS4 WHERE anio = '" + anio + "' and provincia = 'total'",
           chartType: "ColumnChart",
           options: {
@@ -436,7 +526,7 @@
           dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
           query: "SELECT 'provincia', 'Aborto','T_Hipert','T_Placenta','Otras_directas','Hemorragia_post', 'Sepsis_y_O', 'Enf_por_VIH', 'Otras_ind' " +
               "FROM 1hCiTDcyuaZaqzQ11roxhvvL8cmVdZZxoLnTXQS4 WHERE provincia = 'total'",
-          chartType: "ColumnChart",
+          chartType: "AreaChart",
           options: {
             title: "Causas Totales por año",
             height: 400,
@@ -546,11 +636,13 @@
 			  <div class="nav-collapse collapse">
 				<ul class="nav">
 					<li class="active"><a href="Home.html">Home</a></li>
-					<li><a href="DetalleProvincia.html">Detalle de provincia</a></li>
-					<li><a href="Nosotros.html">Sobre nosotros</a></li>
-					<li><a href="Problema.html">Cu&aacute;l es el problema?</a></li>
-					<li><a href="ProyectoYPorque.html">Sobre el proyecto y por qu&eacute; lo hacemos</a></li>				  
-					<li><a href="Apoyan.html">Qui&eacute;nes nos apoyan</a></li>
+					<li><a href="DetalleProvincia.html">Detalle de provincia</a></li>					
+				</ul>
+				<ul class="nav" style="float:right">					
+					<li><a href="Nosotros.html">Nosotros</a></li>
+					<!--li><a href="Problema.html">Cu&aacute;l es el problema?</a></li-->
+					<li><a href="ProyectoYPorque.html">Proyecto</a></li>				  
+					<li><a href="Apoyan.html">Ayuda</a></li>
 					<li><a href="Contacto.html">Contacto</a></li>
 				</ul>
 			  </div>
@@ -563,10 +655,7 @@
 				<h3>plataforma de monitoreo de la mortalidad materna</h3>
 					<p class="text-info"><b class="brand">las.mujeres.cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como prop&oacutesito hacer p&uacuteblica la informaci&oacute;n reportada en las estad&iacutesticas oficiales, enriquecerla con informaci&oacute;n descriptiva y hacer un seguimiento de sus indicadores para brindar una visi&oacute;n m&aacute;s profunda del problema y en definitiva, buscar un futuro mejor para las mujeres de nuestro pa&iacute;s.</p>
 	<div class="span2" >
-				<form>
-					<h5><abbr title="Seleccione alguno de los indicadores y elija el a&ntilde;o sobre el cual quiere conocer los datos. El mapa mostrar&aacute; la distribuci&oacute;n de la informaci&oacute;n seleccionada a nivel provincial.">A&#241;o:</abbr></h5>					
-					<span id="anio" class="label label-info"></span>
-					<div id="slider" style="width: 200px;"></div>
+				<form>					
 					<h5><abbr title="Este valor representa la relaci&oacute;n entre las muertes maternas y la cantidad de nacidos vivos (10 mil). La leyenda de referencia al pie del mapa aclara los valores de los matices crom&aacute;ticos del mapa.">Visualizaciones:</abbr></h5>
 					<ul>
 						<li>					
@@ -600,6 +689,9 @@
 							<input type="radio" name="group1" value="Otras_ind_P"> Otras causas indirectas							
 						</li>						
 					</ul>
+					<h5><abbr title="Seleccione alguno de los indicadores y elija el a&ntilde;o sobre el cual quiere conocer los datos. El mapa mostrar&aacute; la distribuci&oacute;n de la informaci&oacute;n seleccionada a nivel provincial.">A&#241;o:</abbr></h5>					
+					<span id="anio" class="label label-info"></span>
+					<div id="slider" style="width: 200px;"></div>
 				</form>
 			</div>
 			<div class="span5"><div id="map-canvas"></div></div>

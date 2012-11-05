@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>MMI</title>
     <!—[if lt IE 9]>
@@ -88,41 +88,36 @@
     </style>
 
     <script type="text/javascript">
-      google.load('visualization', '1', { packages: ['corechart'] });
-
-      /**
-       * Sector type mapped to a style rule.
-       * @type {Object}
-       * @const
-       */
-      var LAYER_STYLES = {
-        'escala': {
-          'min': 0,
-          'max': 18,
-          'colors': [
-            '#ea9999',
-            '#e06666',
-            '#cc0000',
-            '#990000'
-          ]
-        }
-      }
+	google.load('visualization', '1', { packages: ['corechart'] });
 	
-	function getParameterByName(name)
-	{
-	  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-	  var regexS = "[\\?&]" + name + "=([^&#]*)";
-	  var regex = new RegExp(regexS);
-	  var results = regex.exec(window.location.search);
-	  if(results == null)
-		return "";
-	  else
-		return decodeURIComponent(results[1].replace(/\+/g, " "));
+	var LAYER_STYLES = {
+		'escala': {
+		  'min': 0,
+		  'max': 18,
+		  'colors': [
+			'#ea9999',
+			'#e06666',
+			'#cc0000',
+			'#990000'
+		  ]
+		}
+	}
+	
+	function getParameterByName(name){
+		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+		var regexS = "[\\?&]" + name + "=([^&#]*)";
+		var regex = new RegExp(regexS);
+		var results = regex.exec(window.location.search);
+		if(results == null)
+			return "";
+		else
+			return decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 
-	  var layer = null;
-	  var layerDep = null;
-      function initialize() {
+	var layer = null;
+	var layerDep = null;
+	
+	function initialize() {
 		var type = $('input[name=group1]:checked').val();
 		var anio = '2010';
 		var provincia = getParameterByName("provincia");
@@ -147,6 +142,8 @@
 				  },
 				});
 				
+				$("#nombre-provincia")[0].textContent = "- " + provincia;
+				
 				layerDep = new google.maps.FusionTablesLayer();
 				drawLayerDepartamentos(layerDep, provincia);
 				layerDep.setMap(map);
@@ -157,13 +154,9 @@
 
 				createLegend(map, type);
 				styleLayerBySector(layer, type);
-				styleMap(map);
-				drawVisualizationCoverturaMedica(anio, provincia)
-				drawVisualizationAtencionMedica(anio, provincia)
-				drawVisualizationDondeOcurrio(anio, provincia)
-				drawVisualizationNivelInstruccion(anio, provincia)
-				drawVisualizationEdad(anio, provincia)
-
+				styleMap(map);			
+				drawVisualizationDondeOcurrio(anio, provincia, "visualization-1")
+				drawVisualizationEdad(anio, provincia, "visualization-2")
 			});
 		}
 		setProvincia();
@@ -171,21 +164,18 @@
 		$( "#anio" ).text( "2010" );
 		
 		$( "#slider" ).slider({
-				value:2010,
-				min: 2006,
-				max: 2010,
-				step: 1,
-				slide: function( event, ui ) {
-					$( "#anio" ).text( ui.value );
-					anio = ui.value;
-					updateLayerQuery(layer, type, anio, provincia);								
-					styleLayerBySector(layer, type);
-					drawVisualizationCoverturaMedica(anio, provincia)
-					drawVisualizationAtencionMedica(anio, provincia)
-					drawVisualizationDondeOcurrio(anio, provincia)
-				    drawVisualizationNivelInstruccion(anio, provincia)
-					drawVisualizationEdad(anio, provincia)
-				}
+			value:2010,
+			min: 2006,
+			max: 2010,
+			step: 1,
+			slide: function( event, ui ) {
+				$( "#anio" ).text( ui.value );
+				anio = ui.value;
+				updateLayerQuery(layer, type, anio, provincia);								
+				styleLayerBySector(layer, type);
+				drawChartVisualization(anio, provincia, "visualization-1");
+				drawChartVisualization(anio, provincia, "visualization-2");
+			}
 		});
 			
 		$("input[name=group1]").click(function() {
@@ -199,42 +189,67 @@
 			provincia = $("#provincia11").val();
 			setProvincia();
 		});
-      }
-	  
-	  function drawLayerDepartamentos(layerDep, provincia)
-	  {
-			var where = "";
-			if (provincia) {
-				where += " provNombre contains ignoring case '" + provincia + "'";
-			}
-			layerDep.setOptions({
-			  query: { 
-				select: 'kml',
-				from: '1OOIdn0U28iYbA280ccw_DRr3iiv27AKumWEbbus',
-				where: where
-			  }
-			});
-	  }
-	  
-	  function setStyleLayerDep(layerDep)
-	  {
-			var styles = new Array();
-			styles.push({			
-				polygonOptions: {
-				  fillColor: '#f4cccc',
-				  fillOpacity: 1
-				}
-			  });
+		
+		$("#type-visualization-1").change(function(){
+			drawChartVisualization(anio, provincia, "visualization-1")
+		});
+		
+		$("#type-visualization-2").change(function(){
+			drawChartVisualization(anio, provincia, "visualization-2")
+		});
+	}
+	
+	function drawChartVisualization(anio, provincia, visualization){
+		var typeVisualization = $("#type-" + visualization).val();
+
+		if (typeVisualization == "donde-ocurrio")
+			drawVisualizationDondeOcurrio(anio, provincia, visualization)
 			
-			layerDep.set('styles', styles);
-	  }
+		if (typeVisualization == "covertura-medica")
+			drawVisualizationCoverturaMedica(anio, provincia, visualization)
+			
+		if (typeVisualization == "atencion-medica")
+			drawVisualizationAtencionMedica(anio, provincia, visualization)
+			
+		if (typeVisualization == "nivel-instruccion")
+			drawVisualizationNivelInstruccion(anio, provincia, visualization)
+			
+		if (typeVisualization == "edad")
+			drawVisualizationEdad(anio, provincia, visualization)
+	}
 	  
-	  function updateLayerQuery(layer, type, anio, provincia) {			
+	function drawLayerDepartamentos(layerDep, provincia){
+		var where = "";
+		if (provincia) {
+			where += " provNombre contains ignoring case '" + provincia + "'";
+		}
+		layerDep.setOptions({
+		  query: { 
+			select: 'kml',
+			from: '1OOIdn0U28iYbA280ccw_DRr3iiv27AKumWEbbus',
+			where: where
+		  }
+		});
+	}
+	  
+	function setStyleLayerDep(layerDep){
+		var styles = new Array();
+		styles.push({			
+			polygonOptions: {
+			  fillColor: '#f4cccc',
+			  fillOpacity: 1
+			}
+		  });
+		
+		layerDep.set('styles', styles);
+	}
+	  
+	function updateLayerQuery(layer, type, anio, provincia) {			
 		var where = "";
 		if (anio) {
 			where += " anio = '" + anio + "'";
 		}
-		
+
 		if (type == "residencia"){			
 			where += "and residencia contains ignoring case '" + provincia + "'";
 			
@@ -246,7 +261,7 @@
 			  }
 			});
 		}
-        if (type == "ocurrencia"){
+		if (type == "ocurrencia"){
 			where += "and ocurrencia contains ignoring case '" + provincia + "'";
 			
 			layer.setOptions({
@@ -258,17 +273,17 @@
 			});
 		}
 		if(type == "depResidencia"){
-			/*if (provincia) {
-				where += " provNombre contains ignoring case '" + provincia + "'";
-			}
-			layer.setOptions({
-			  query: { 
-				select: 'kml',
-				from: '1OOIdn0U28iYbA280ccw_DRr3iiv27AKumWEbbus',
-				where: where
-			  }
-			});*/		
-			
+		/*if (provincia) {
+			where += " provNombre contains ignoring case '" + provincia + "'";
+		}
+		layer.setOptions({
+		  query: { 
+			select: 'kml',
+			from: '1OOIdn0U28iYbA280ccw_DRr3iiv27AKumWEbbus',
+			where: where
+		  }
+		});*/		
+		
 			var where = "";
 			if (provincia) {
 				where += " residencia contains ignoring case '" + provincia + "' and anio = '" + anio + "'";
@@ -279,198 +294,196 @@
 				from: '1ktI6a8YHXAtOytgP538buvOYuA5CwCOFkC5UK6Q',
 				where: where
 				}
-			});
-			
-						
+			});			
 		}
-      }
+	}
 	  
-	  function ProvinciaDetalle(provincia, lat, lng)
-		{
-			updateLayerQuery(layer, "tasa");
-				
-			layer.e.setZoom(6);
-			layer.e.setCenter(new google.maps.LatLng(lat, lng));	
-			drawVisualization(provincia);
-			drawVisualizationCodMuer(provincia);
+	function ProvinciaDetalle(provincia, lat, lng){
+		updateLayerQuery(layer, "tasa");
 			
-			return false;
-	 }
+		layer.e.setZoom(6);
+		layer.e.setCenter(new google.maps.LatLng(lat, lng));	
+		drawVisualization(provincia);
+		drawVisualizationCodMuer(provincia);
+		
+		return false;
+	}
 	  
-      function createLegend(map, type) {
-        var legendWrapper = document.createElement('div');
-        legendWrapper.id = 'legendWrapper';
-        legendWrapper.index = 1;
-        map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
-            legendWrapper);
-        legendContent(legendWrapper, type);
-      }
+	function createLegend(map, type) {
+		var legendWrapper = document.createElement('div');
+		legendWrapper.id = 'legendWrapper';
+		legendWrapper.index = 1;
+		map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(
+			legendWrapper);
+		legendContent(legendWrapper, type);
+	}
 	  
-	  function updateLegend(type) {
+	function updateLegend(type) {
 		var legendWrapper = $("#legendWrapper");
 		legendWrapper.empty();
-        legendContent(legendWrapper, type);
-      }
+		legendContent(legendWrapper, type);
+	}
 
-      function legendContent(legendWrapper, type) {
-	    var sector = "escala";
-        var legend = document.createElement('div');
-        legend.id = 'legend';
+	function legendContent(legendWrapper, type) {
+		var sector = "escala";
+		var legend = document.createElement('div');
+		legend.id = 'legend';
 
-        var title = document.createElement('p');
-        title.innerHTML = sector;
-        legend.appendChild(title);
+		var title = document.createElement('p');
+		title.innerHTML = sector;
+		legend.appendChild(title);
 
-        var layerStyle = LAYER_STYLES[sector];
-        var colors = layerStyle.colors;
-        var minNum = layerStyle.min;
-        var maxNum = layerStyle.max;
-        var step = (maxNum - minNum) / colors.length;
-        for (var i = 0; i < colors.length; i++) {
-          var legendItem = document.createElement('div');
+		var layerStyle = LAYER_STYLES[sector];
+		var colors = layerStyle.colors;
+		var minNum = layerStyle.min;
+		var maxNum = layerStyle.max;
+		var step = (maxNum - minNum) / colors.length;
+		for (var i = 0; i < colors.length; i++) {
+			var legendItem = document.createElement('div');
 
-          var color = document.createElement('div');
-          color.setAttribute('class', 'color');
-          color.style.backgroundColor = colors[i];
-          legendItem.appendChild(color);
+			var color = document.createElement('div');
+			color.setAttribute('class', 'color');
+			color.style.backgroundColor = colors[i];
+			legendItem.appendChild(color);
 
-          var newMin = minNum + step * i;
-          var newMax = newMin + step;
-          var minMax = document.createElement('span');
-          minMax.innerHTML = newMin + ' - ' + newMax;
-          legendItem.appendChild(minMax);
+			var newMin = minNum + step * i;
+			var newMax = newMin + step;
+			var minMax = document.createElement('span');
+			minMax.innerHTML = newMin + ' - ' + newMax;
+			legendItem.appendChild(minMax);
 
-          legend.appendChild(legendItem);
-        }
+			legend.appendChild(legendItem);
+		}
 
-        legendWrapper.appendChild(legend);
-      }
+		legendWrapper.appendChild(legend);
+	}
 
-      function updateLegend(sector) {
-        var legendWrapper = document.getElementById('legendWrapper');
-        var legend = document.getElementById('legend');
-        legendWrapper.removeChild(legend);
-        legendContent(legendWrapper, sector);
-      }
+	function updateLegend(sector) {
+		var legendWrapper = document.getElementById('legendWrapper');
+		var legend = document.getElementById('legend');
+		legendWrapper.removeChild(legend);
+		legendContent(legendWrapper, sector);
+	}
 
-      function styleLayerBySector(layer, type) {
-        var layerStyle = LAYER_STYLES["escala"];
-        var colors = layerStyle.colors;
-        var minNum = layerStyle.min;
-        var maxNum = layerStyle.max;
-        var step = (maxNum - minNum) / colors.length;
+	function styleLayerBySector(layer, type) {
+		var layerStyle = LAYER_STYLES["escala"];
+		var colors = layerStyle.colors;
+		var minNum = layerStyle.min;
+		var maxNum = layerStyle.max;
+		var step = (maxNum - minNum) / colors.length;
 
-        var styles = new Array();
-        for (var i = 0; i < colors.length; i++) {
-          var newMin = minNum + step * i;
-          styles.push({
-            where: generateWhere(newMin, "total"),
-            polygonOptions: {
-              fillColor: colors[i],
-              fillOpacity: 1
-            }
-          });
-        }
-        layer.set('styles', styles);
-      }
+		var styles = new Array();
+		for (var i = 0; i < colors.length; i++) {
+		  var newMin = minNum + step * i;
+		  styles.push({
+			where: generateWhere(newMin, "total"),
+			polygonOptions: {
+			  fillColor: colors[i],
+			  fillOpacity: 1
+			}
+		  });
+		}
+		layer.set('styles', styles);
+	}
 
-      function generateWhere(minNum, column) {
-        var whereClause = new Array();
-        whereClause.push("'");
+	function generateWhere(minNum, column) {
+		var whereClause = new Array();
+		whereClause.push("'");
 		whereClause.push(column);
-        whereClause.push("' >= ");
-        whereClause.push(minNum);
-        return whereClause.join('');
-      }
+		whereClause.push("' >= ");
+		whereClause.push(minNum);
+		return whereClause.join('');
+	}
 
-      function styleMap(map) {
-        var style = [{
-          featureType: 'all',
-          stylers: [{
-            saturation: -99
-          }]
-        }, {
-          featureType: 'poi',
-          stylers: [{
-            visibility: 'off'
-          }]
-        }, {
-          featureType: 'road',
-          stylers: [{
-            visibility: 'off'
-          }]
-        }];
+	function styleMap(map){
+		var style = [{
+		  featureType: 'all',
+		  stylers: [{
+			saturation: -99
+		  }]
+		}, {
+		  featureType: 'poi',
+		  stylers: [{
+			visibility: 'off'
+		  }]
+		}, {
+		  featureType: 'road',
+		  stylers: [{
+			visibility: 'off'
+		  }]
+		}];
 
-        var styledMapType = new google.maps.StyledMapType(style, {
-          map: map,
-          name: 'Styled Map'
-        });
-        map.mapTypes.set('map-style', styledMapType);
-        map.setMapTypeId('map-style');
-      }
+		var styledMapType = new google.maps.StyledMapType(style, {
+		  map: map,
+		  name: 'Styled Map'
+		});
+		map.mapTypes.set('map-style', styledMapType);
+		map.setMapTypeId('map-style');
+	}
 	  
-	  function drawVisualizationCoverturaMedica(anio, provincia) {
-        google.visualization.drawChart({
-          containerId: "visualization-cm",
-          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT asociad, count() " +
-              "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
+	function drawVisualizationCoverturaMedica(anio, provincia, visualization){
+		google.visualization.drawChart({
+		  containerId: visualization,
+		  dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+		  query: "SELECT asociad, count() " +
+			  "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
 			  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
 			  "group by asociad",
-          chartType: "PieChart",
-          options: {
-            title: "Cobertura Medica ",
-            height: 220,
-            width: 300,
-      animation:{
-        duration: 1000,
-        easing: 'out',
-      }
-          }
-        });
-      }
+		  chartType: "PieChart",
+		  options: {
+			title: "Cobertura Medica ",
+			height: 220,
+			width: 400,
+			animation:{
+				duration: 1000,
+				easing: 'out',
+			}
+		  }
+		});
+	}
 	  
-	  function drawVisualizationAtencionMedica(anio, provincia) {
-        google.visualization.drawChart({
-          containerId: "visualization-am",
-          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT atenmed, count() " +
-              "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
+	function drawVisualizationAtencionMedica(anio, provincia, visualization) {
+		google.visualization.drawChart({
+		  containerId: visualization,
+		  dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+		  query: "SELECT atenmed, count() " +
+			  "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
 			  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
 			  "group by atenmed	",
-          chartType: "PieChart",
-          options: {
-            title: "Atencion Medica ",
-            height: 220,
-            width: 300
-          }
-        });
-      }
+		  chartType: "PieChart",
+		  options: {
+			title: "Atencion Medica ",
+			height: 220,
+			width: "auto"
+		  }
+		});
+	}
 	  
-	  function drawVisualizationDondeOcurrio(anio, provincia) {
-        google.visualization.drawChart({
-          containerId: "visualization-do",
-          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT ocloc, count() " +
-              "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
+	function drawVisualizationDondeOcurrio(anio, provincia, visualization) {
+		google.visualization.drawChart({
+		  containerId: visualization,
+		  dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+		  query: "SELECT ocloc, count() " +
+			  "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
 			  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
 			  "group by ocloc	",
-          chartType: "PieChart",
-          options: {
-            title: "Donde Ocurrio",
-            height: 220,
-            width: 300
-          }
-        });
-      }
+		  chartType: "PieChart",
+		  options: {
+			title: "Donde Ocurrio",
+			height: 220,
+			width: "auto"
+		  }
+		});
+	}
 	  
-	  function drawVisualizationNivelInstruccion(anio, provincia) {
+	function drawVisualizationNivelInstruccion(anio, provincia, visualization) {
 		$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20anio,%20finstruc,%20count()%20as%20count%20FROM%201ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM%20WHERE%20residencia%20contains%20ignoring%20case%20\'"+provincia+"\'%20group%20by%20finstruc,%20anio&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
 			var datatable = new google.visualization.DataTable();
 			var columns = ["0", "1", "2", "3", "4", "5", "6", "7", "9", "11", "12", "13", "14", "99" ];
+			var columnsNames = ["0", "Nunca asistió", "Primario Incompleto", "Primario Completo", "Secundario incompleto", "Secundario completo", "Superior o Universitario incompleto", "Superior o Universitario completo", "9", "Ciclos EGB (1 y 2) incompletos", "Ciclos EGB (1 y 2) completos", "Ciclo EGB 3 incompleto", "Ciclo EGB 3 completo", "Se ignora" ];
 			var rows = [ "2006", "2007", "2008", "2009", "2010"];
 			datatable.addColumn("string", "Anio");
- 			$.each(columns, function(key, columnName) {
+			$.each(columnsNames, function(key, columnName) {
 					datatable.addColumn("number", columnName);
 			});	
 			datatable.addRows(5);
@@ -482,16 +495,16 @@
 				hAxis: {title: 'Anio',  titleTextStyle: {color: 'red'}},
 				isStacked:true,
 				height: 350,
-				width: 220,
+				width: "auto",
 				title: "Nivel de instruccion"
 			};
 			
-			var chart = new google.visualization.ColumnChart(document.getElementById('visualization-ni'));
+			var chart = new google.visualization.ColumnChart(document.getElementById(visualization));
 			chart.draw(datatable, options);
 		});
-      }
+	}
 	  
-	  function drawVisualizationEdad(anio, provincia) {
+	function drawVisualizationEdad(anio, provincia, visualization) {
 		$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20anio,%20grupedad,%20count()%20as%20count%20FROM%201ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM%20WHERE%20residencia%20contains%20ignoring%20case%20\'"+provincia+"\'%20group%20by%20grupedad,%20anio&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
 			var datatable = new google.visualization.DataTable();
 			var columns = ["0", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55" ];
@@ -508,18 +521,18 @@
 			var options = {				
 				isStacked:true,
 				height: 350,
-				width: 220,
+				width: "auto",
 				title: "Edad"
 			};
 			
-			var chart = new google.visualization.ColumnChart(document.getElementById('visualization-e'));
+			var chart = new google.visualization.ColumnChart(document.getElementById(visualization));
 			chart.draw(datatable, options);
 		});	
-      }
+	}
 
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-  </head>
+	google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+</head>
   <body>
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
@@ -528,11 +541,13 @@
 			  <div class="nav-collapse collapse">
 				<ul class="nav">
 					<li><a href="Home.html">Home</a></li>
-					<li class="active"><a href="DetalleProvincia.html">Detalle de provincia</a></li>
-					<li><a href="Nosotros.html">Sobre nosotros</a></li>
-					<li><a href="Problema.html">Cual es el problema?</a></li>
-					<li><a href="ProyectoYPorque.html">Sobre el proyecto y por que lo hacemos</a></li>				  
-					<li><a href="Apoyan.html">Quienes nos apoyan</a></li>
+					<li  class="active"><a href="DetalleProvincia.html">Detalle de provincia</a></li>					
+				</ul>
+				<ul class="nav" style="float:right">					
+					<li><a href="Nosotros.html">Nosotros</a></li>
+					<!--li><a href="Problema.html">Cu&aacute;l es el problema?</a></li-->
+					<li><a href="ProyectoYPorque.html">Proyecto</a></li>				  
+					<li><a href="Apoyan.html">Ayuda</a></li>
 					<li><a href="Contacto.html">Contacto</a></li>
 				</ul>
 			  </div>
@@ -540,17 +555,14 @@
 		</div>
 	</div>
 	<div class="container-fluid">
-		        <div class="row-fluid">
-				<h3>detalle provincial</h3>
-
-            <p class="text-info">	La distribucion de las muertes maternas var’a mucho de provincia en provincia, de hecho el Objetivo del Milenio, en su cap&iacute;tulo local, incorpor&oacute; el objetivo concreto de disminuir en un 10% la brecha existente entre las provincias, con respecto a los &iacute;ndices resultantes del a&ntilde;o 1990. Mientras que la media es 4.4%, la provincia de Mendoza tiene una tasa de la muerte materna para el 2010 de  x. Existen tambi&eacute;n variaciones locales en la muerte materna hacia adentro de cada provincia, que se pueden ver en el mapa, al observar las diferencias en los  datos departamentales. Los gr&aacute;ficos de la derecha contextualizan esta vista detalle a nivel  departamentos con informaci&oacute;n adicional de tipo socioecon&oacute;mico para la provincia.</p>
-<div class="span2" >
-
-				<form>					
-				
+		<div class="row-fluid">
+			<h3>Detalle provincial <span id="nombre-provincia"></span></h3>
+			<p class="text-info">	La distribucion de las muertes maternas var’a mucho de provincia en provincia, de hecho el Objetivo del Milenio, en su cap&iacute;tulo local, incorpor&oacute; el objetivo concreto de disminuir en un 10% la brecha existente entre las provincias, con respecto a los &iacute;ndices resultantes del a&ntilde;o 1990. Mientras que la media es 4.4%, la provincia de Mendoza tiene una tasa de la muerte materna para el 2010 de  x. Existen tambi&eacute;n variaciones locales en la muerte materna hacia adentro de cada provincia, que se pueden ver en el mapa, al observar las diferencias en los  datos departamentales. Los gr&aacute;ficos de la derecha contextualizan esta vista detalle a nivel  departamentos con informaci&oacute;n adicional de tipo socioecon&oacute;mico para la provincia.</p>
+		</div>
+		<div class="row-fluid">
+			<div class="span2" >							
+				<form>									
                     <h5><abbr title="Sobre el mapa se ilustran seg&uacute;n la escala de la leyenda los datos departamentales de muerte materna por ocurrencia, por residencia y la proporci&oacute;n de muertes con residencia en el departamento sobre el total provincial. Elija el a&ntilde;o sobre el cual quiere conocer los datos. Para comparar, se puede seleccionar una segunda provincia. Los gr&aacute;ficos a la derecha agregan informaci&oacute;n de contexto correspondientes a toda la provincia.">Visualizaciones</abbr></h5>					
-					<!--span id="anio" class="label label-info"></span>
-					<div id="slider" style="width: 200px;"></div!-->
 					<h5><abbr title="nada x ahora">Datos por departamento:</abbr></h5>
 					<ul>
 						<li>					
@@ -626,18 +638,36 @@
 					</select>
 				</form>
 			</div>
-			<div class="span5"><div id="map-canvas"></div></div>
-			<div class="span2"><div id="visualization-cm"></div><div id="visualization-am"></div><div id="visualization-do"></div></div>
-			<div class="span2"><div id="visualization-e"></div><div id="visualization-ni"></div></div>
-		
-			
+			<div class="span10" >
+				<div class="row-fluid">
+					<div class="span5"><div id="map-canvas"></div></div>
+					<div class="span5">
+						<div id="visualization-1"></div>
+						<select id="type-visualization-1">
+							<option value="donde-ocurrio">Donde Ocurrio</option>
+							<option value="covertura-medica">Covertura Medica</option>
+							<option value="atencion-medica">Atencion Medica</option>					
+							<option value="nivel-instruccion">Nivel Instruccion</option>
+							<option value="edad">Edad</option>
+						</select>
+						<div id="visualization-2"></div>
+						<select id="type-visualization-2">
+							<option value="edad">Edad</option>
+							<option value="covertura-medica">Covertura Medica</option>
+							<option value="atencion-medica">Atencion Medica</option>
+							<option value="donde-ocurrio">Donde Ocurrio</option>
+							<option value="nivel-instruccion">Nivel Instruccion</option>					
+						</select>
+					</div>
+				</div>
+			</div>						
 		</div>
-		<div class="row-fluid">
+		<!--div class="row-fluid">
 				<div class="span2"></div>
 				<div class="span5"><div id="map-canvas2"></div></div>
 				<div class="span2"><div id="visualization-cm2"></div><div id="visualization-am2"></div><div id="visualization-e2"></div></div>
 				<div class="span2"><div id="visualization-do2"></div><div id="visualization-ni2"></div></div>
-		</div>
+		</div-->
 	</div>
     
   </body>
