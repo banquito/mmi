@@ -128,6 +128,10 @@
 		
 		function setProvincia()
 		{
+			var zoom = 6;
+			if (provincia == "")
+				zoom = 4;
+				
 			var geocoder = new google.maps.Geocoder();
 			geocoder.geocode({ 'address': "Argentina," + provincia}, function(results,status){
 				var latitude = results[0].geometry.location.lat();
@@ -135,14 +139,15 @@
 				
 				var map = new google.maps.Map(document.getElementById('map-canvas'), {
 				  center: new google.maps.LatLng(latitude, longitude),
-				  zoom: 6,
+				  zoom: zoom,
 				  mapTypeId: google.maps.MapTypeId.ROADMAP,
 				  zoomControlOptions: {
 					style: google.maps.ZoomControlStyle.SMALL
 				  },
 				});
 				
-				$("#nombre-provincia")[0].textContent = "- " + provincia;
+				if (provincia != "")
+					$("#nombre-provincia")[0].textContent = "- " + provincia;
 				
 				layerDep = new google.maps.FusionTablesLayer();
 				drawLayerDepartamentos(layerDep, provincia);
@@ -562,8 +567,11 @@
 		<div class="row-fluid">
 			<div class="span2" >							
 				<form>									
-                    <h5><abbr title="Sobre el mapa se ilustran seg&uacute;n la escala de la leyenda los datos departamentales de muerte materna por ocurrencia, por residencia y la proporci&oacute;n de muertes con residencia en el departamento sobre el total provincial. Elija el a&ntilde;o sobre el cual quiere conocer los datos. Para comparar, se puede seleccionar una segunda provincia. Los gr&aacute;ficos a la derecha agregan informaci&oacute;n de contexto correspondientes a toda la provincia.">Visualizaciones</abbr></h5>					
-					<h5><abbr title="nada x ahora">Datos por departamento:</abbr></h5>
+                    <h5>
+						<abbr title="Sobre el mapa se ilustran seg&uacute;n la escala de la leyenda los datos departamentales de muerte materna por ocurrencia, por residencia y la proporci&oacute;n de muertes con residencia en el departamento sobre el total provincial. Elija el a&ntilde;o sobre el cual quiere conocer los datos. Para comparar, se puede seleccionar una segunda provincia. Los gr&aacute;ficos a la derecha agregan informaci&oacute;n de contexto correspondientes a toda la provincia.">
+							Datos por departamento:
+						</abbr>
+					</h5>										
 					<ul>
 						<li>					
 							<input type="radio" name="group1" value="proporcional" checked><abbr title="Este valor representa la relaci&oacute;n porcentual entre las muertes maternas con residencia en este departamento y la totalidad de muertes maternas de toda la provincia. La leyenda aclara los valores de los matices."> Proporci&oacute;n de muertes maternas en el departamento 	</abbr></li>
