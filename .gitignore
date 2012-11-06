@@ -1,0 +1,9 @@
+# OS
+.DS_Store
+*.db
+Thumbs.db
+
+# Silex
+site/log/*
+site/cache/*
+site/vendor/
