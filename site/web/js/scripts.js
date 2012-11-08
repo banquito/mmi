@@ -10,4 +10,9 @@ $(document).ready(function() {
         change: function(event, ui) {
         }
     });
+
+    $("#filtros li a").click(function(e){
+        e.preventDefault();
+        $(this).tab('show');
+    });
 });
