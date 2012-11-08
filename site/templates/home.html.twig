@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% set active = 'homepage' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Inicio{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h1>Plataforma de monitoreo de la mortalidad materna</h1>
+    <h2>Plataforma de monitoreo de la mortalidad materna</h2>
 </div>
 
 <p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales, enriquecerla con información descriptiva y hacer un seguimiento de sus indicadores para brindar una visión más profunda del problema y en definitiva, buscar un futuro mejor para las mujeres de nuestro país.</p>
@@ -31,7 +31,7 @@
               <li class="nav-header">Grupo de causas de muerts indirectas</li>
               <li><a href="#">Enfermedad por V.I.H.</a></li>
               <li><a href="#">Otras causas indirectas</a></li>
-              <li class="nav-header">Año</li>
+              <li class="nav-header">Año <span class="label" id="slider-current">2006</span></li>
               <li class="navbar-text"><div id="slider" class="slider"></div></li>
           </ul>
           <div class="tab-content">

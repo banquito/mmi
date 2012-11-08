@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% set active = 'ayuda' %}
+
+{% block title %}Ayuda{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Una alianza entre expertos en salud y en innovación <small></small></h2>
+</div>
+
+<p>Para el lanzamiento de la plataforma de monitoreo, <b>Las mujeres cuentan</b> recibió el apoyo de UNICEF.</p>
+<p>Para afianzar la colaboración con los distintos actores involucrados - profesionales de la salud, pacientes, familiares, investigadores, expertos en modelado, visualización, usabilidad de interfases y comunicación - y alimentar la plataforma con datos adicionales e información de diversas fuentes, aspiramos a sumar apoyos de distintos niveles del ámbito público y de organismos internacionales vinculados al área de salud.</p>
+
+<div class="row-fluid" style="margin-top: 40px;">
+    <div class="offset3 span6">
+        <ul class="thumbnails">
+          <li>
+            <a class="thumbnail" href="http://www.unicef.org" title="UNICEF" target="_blank">
+                <img src="{{ app.request.basepath }}/img/logo-unicef.jpg" alt="UNICEF" />
+            </a>
+          </li>
+          <li>
+            <a class="thumbnail" href="http://www.unfpaargentina.com.ar" title="UNFPA" target="_blank">
+                <img src="{{ app.request.basepath }}/img/logo-unfpa.jpg" alt="UNFPA" />
+            </a>
+          </li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
