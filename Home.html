@@ -11,6 +11,8 @@
 		
 	<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui-1.8.23.custom.min.js"></script>
+	<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+	<script type='text/javascript' src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
 	
 	<link type="text/css" href="css/smoothness/jquery-ui-1.8.23.custom.css" rel="stylesheet" />
 	<link href="css/default.css"
@@ -221,24 +223,24 @@
 		$( "#anio" ).text( "2010" );
 		
 		$( "#slider" ).slider({
-				value:2010,
-				min: 2006,
-				max: 2010,
-				step: 1,
-				slide: function( event, ui ) {
-					$( "#anio" ).text( ui.value );
-					anio = ui.value;											
-					if (type == "tasa"){
-						updateLayerQuery(layer, type);
-						styleLayerBySector(layer, anio, type);
-						drawVisualizationTablaTasa(anio);
-					}else{
-						updateLayerQuery(layer, "causa", anio);
-						styleLayerBySector(layer, type, type);
-						drawVisualizationCausas(anio)
-						drawVisualizationTabla(anio)						
-					}					
-				}
+			value:2010,
+			min: 2006,
+			max: 2010,
+			step: 1,
+			slide: function( event, ui ) {
+				$( "#anio" ).text( ui.value );
+				anio = ui.value;											
+				if (type == "tasa"){
+					updateLayerQuery(layer, type);
+					styleLayerBySector(layer, anio, type);
+					drawVisualizationTablaTasa(anio);
+				}else{
+					updateLayerQuery(layer, "causa", anio);
+					styleLayerBySector(layer, type, type);
+					drawVisualizationCausas(anio)
+					drawVisualizationTabla(anio)						
+				}					
+			}
 		});
 			
 		$("input[name=group1]").click(function() {
@@ -278,13 +280,23 @@
 		drawVisualizationTablaTasa(anio);
 		
 		google.maps.event.addListener(layer, 'click', function(e) {
-			//aca configuramos lo que mostramos a la derecha y el dialogo
-			var provincia = e.row["provincia"].value
+			/*var provincia = e.row["provincia"].value
 			var tasa = e.row[$( "#anio" ).text()].value;
 			var parametros = jQuery.param({ provincia:provincia});
-            e.infoWindowHtml = "<label>Tasa de mortalidad:</label><p>"+tasa+"</p><br /><a href='\DetalleProvincia.html?"+parametros+"' >detalle de provincia</a>";
+            e.infoWindowHtml =jQuery.validator.format(e.infoWindowHtml, tasa)
+			e.infoWindowHtml = "<label>Tasa de mortalidad:</label><p>"+tasa+"</p><br /><a href='\DetalleProvincia.html?"+parametros+"' >detalle de provincia</a>";*/
+			if (type = "tasa"){
+				e.infoWindowHtml = $('#infoWindowTemplateTasa').tmpl(jQuery.parseJSON(e.row)).get(0).outerHTML;
+			}else{
+				e.infoWindowHtml = $('#infoWindowTemplateCausa').tmpl(jQuery.parseJSON(e.row)).get(0).outerHTML;
+			}
 		});
       }
+	  
+	function getInfoWindow(row, type)
+	{
+
+	}	  
 	  
 	  function updateLayerQuery(layer, type, anio, provincia) {			
 		var where = "";
@@ -309,18 +321,7 @@
 			  }
 			});
 		}
-		if(type == "depResidencia"){
-			/*if (provincia) {
-				where += " provNombre contains ignoring case '" + provincia + "'";
-			}
-			layer.setOptions({
-			  query: { 
-				select: 'kml',
-				from: '1OOIdn0U28iYbA280ccw_DRr3iiv27AKumWEbbus',
-				where: where
-			  }
-			});*/		
-			
+		if(type == "depResidencia"){				
 			var where = "";
 			if (provincia) {
 				where += " residencia contains ignoring case '" + provincia + "' and anio = '" + anio + "'";
@@ -607,8 +608,7 @@
 			{
 				tablename = "1i9UlJDDVcjYz8oWwTY-_6ZXW64QO2TOzvLmn8m4";
 			}
-			
-	  
+				  
 			google.visualization.drawChart({
 			   containerId: "visualization2",
 			   dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
@@ -706,7 +706,7 @@
 				</form>
 			</div>
 			<div class="span5"><div id="map-canvas"></div></div>
-			<div class="span3"><div id="visualization2"></div><div id="visualization"></div></div>
+			<div class="span4">En el a&ntilde;o X [a&ntilde;o] Y [cantidad de muertes ese a&ntilde;o] mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atenci&oacute;n del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este a&ntilde;o fue de Z [tasa de MM]. <div id="visualization2"></div><div id="visualization"></div></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span2" >
@@ -716,6 +716,24 @@
 			</div>
 		</div>
 	</div>
-    
+	
+	<script id="infoWindowTemplateTasa" type="text/x-jquery-tmpl"> 
+		<div class='googft-info-window' style='font-family: sans-serif'>
+			Provincia: XXXprovincia. </br>
+			Tasa de mortalidad materna:XXX </br>
+			Tasa global de fecundidad 2010: XXX </br>
+			Proporción de egresos por abortos: XXX </br>  
+			Proporción de nacidos vivos atendidos por personal capacitado: XXX
+		</div>
+	</script>
+    <script id="infoWindowTemplateCausa" type="text/x-jquery-tmpl"> 
+		<div class='googft-info-window' style='font-family: sans-serif'>
+			XX mujeres que residían en [NOMBRE PROVINCIA] </br> 
+			murieron en el año XX por [CAUSA Y], </br>
+			un xx% sobre el total de las muertes obstétricas de esta provincia.
+		</div>
+	</script>
+	
+	
   </body>
 </html>
