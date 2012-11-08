@@ -10,7 +10,8 @@
 
 <p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales, enriquecerla con información descriptiva y hacer un seguimiento de sus indicadores para brindar una visión más profunda del problema y en definitiva, buscar un futuro mejor para las mujeres de nuestro país.</p>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" id="main-tabs">
+  <li class="pull-right"><a href="#">ODM</a></li>
   <li class="pull-right"><a href="#">Provincia</a></li>
   <li class="active pull-right"><a href="#">País</a></li>
 </ul>
@@ -22,20 +23,21 @@
         <li><a href="#">Tasas de mortalidad materna</a></li>
         <hr />
         <li class="nav-header">Grupo de causas de muerte directas</li>
-        <li><a href="#"><span style="color: green;font-size: 30px">&bull;</span> Embarazo terminado en aborto</a></li>
-        <li><a href="#"><span style="color: grey;">&bull;</span> Trastornos hipertensivos</a></li>
-        <li class="active"><a href="#"><span style="color: blue;">&bull;</span> Tarstornos de placenta y hemorragias</a></li>
-        <li><a href="#"><span style="color: blue;">&bull;</span> Otras causas directas</a></li>
-        <li><a href="#"><span style="color: yellow;">&bull;</span> Hemorragia posparto</a></li>
-        <li><a href="#"><span style="color: red;">&bull;</span> Sepsis</a></li>
+        <li class="active"><a href="#"><span class="badge-custom" style="background-color: green;"></span> Embarazo terminado en aborto</a></li>
+        <li><a href="#"><span class="badge-custom" style="background-color: grey;"></span> Trastornos hipertensivos</a></li>
+        <li><a href="#"><span class="badge-custom" style="background-color: blue;"></span> Tarstornos de placenta y hemorragias</a></li>
+        <li><a href="#"><span class="badge-custom" style="background-color: yellow;"></span> Otras causas directas</a></li>
+        <li><a href="#"><span class="badge-custom" style="background-color: yellow;"></span> Hemorragia posparto</a></li>
+        <li><a href="#"><span class="badge-custom" style="background-color: red;"></span> Sepsis</a></li>
         <li class="nav-header">Grupo de causas de muerts indirectas</li>
-        <li><a href="#"><span style="color: red;">&bull;</span> Enfermedad por V.I.H.</a></li>
-        <li><a href="#"><span style="color: red;">&bull;</span> Otras causas indirectas</a></li>
+        <li><a href="#"><span class="badge-custom" style="background-color: red;"></span> Enfermedad por V.I.H.</a></li>
+        <li><a href="#"><span class="badge-custom" style="background-color: red;"></span> Otras causas indirectas</a></li>
         <hr />
         <li class="nav-header">Año <span class="label pull-right" id="slider-current">2010</span></li>
         <li class="navbar-text"><div id="slider" class="slider"></div></li>
       </ul>
-      <div class="tab-content">
+
+      <div class="tab-content" style="overflow: hidden;">
         <div class="row-fluid">
           <div class="span6">
             <iframe width="100%" height="500" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?viz=MAP&amp;q=select+col26+from+1ePInQ8wuWBsfXcXczd0j3bp7qFFw2v-tXn_g_Rw&amp;h=false&amp;lat=-34.64401353410846&amp;lng=-58.559164727356006&amp;z=11&amp;t=1&amp;l=col26&amp;y=7&amp;tmplt=2"></iframe>
