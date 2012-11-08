@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Las mujeres cuentan - {% block title %}{% endblock %}</title>
     
-    <link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap-cerulean.min.css">
+    <!-- link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap-cerulean.min.css" -->
+    <link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
 
     {% block css %}{% endblock %}
@@ -19,7 +20,12 @@
       }
       .slider {
         margin: 20px;
-      } 
+      }
+      .navbar.brand { 
+        font-weight:600;
+        color:#056B74;
+        font-family:  verdana, sans-serif;
+      }
     </style>
 
     <link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap-responsive.min.css">
