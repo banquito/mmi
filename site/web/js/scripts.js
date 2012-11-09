@@ -16,14 +16,14 @@ $(document).ready(function() {
         e.preventDefault();
         $(this).tab('show');
     });
-
+/*
     $("#main-tabs li a").click(function(e){
         e.preventDefault();
         $(this).tab('show');
     });
-
+*/
     $('ul#filtros').tooltip({
-      selector: "a[rel=tooltip]",
+      selector: "[rel=tooltip]",
       placement: "right",
     })
 

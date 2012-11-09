@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+{% set active = 'homepage' %}
+
+{% block title %}Detalle provincial{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Plataforma de monitoreo de la mortalidad materna</h2>
+</div>
+
+<p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales y enriquecerla con otras dimensiones de análisis para hacer visible un problema complejo y a la vez evitable que padecen muchas mujeres de nuestro país.</p>
+
+<ul class="nav nav-tabs" id="main-tabs">
+  <li class="pull-right"><a href="{{ path("odm") }}">ODM</a></li>
+  <li class="active pull-right"><a href="{{ path("provincial") }}">Provincia</a></li>
+  <li class="pull-right"><a href="{{ path("homepage") }}">País</a></li>
+</ul>
+
+<section id="main-content">
+  <div class="row-fluid">
+  
+    <h4>Las mujeres y la muerte materna en "Mendoza"</h4>
+
+    <p>La distribución de las muertes maternas varía mucho de provincia en provincia, en parte por la cantidad de mujeres residentes en cada una de ellas, en parte por las condiciones en las que ocurre la atención del embarazo, parto y puerperio. El seguimiento local de los  Objetivos del Milenio, incorporó la meta de disminuir en un 10% la brecha existente entre las provincias, con respecto a los <a href="{{ path("odm") }}">índices resultantes del año 1990</a>.</p>
+    <p>Las brechas económicas existentes en el país se reflejan en variaciones en los valores de la tasa de muerte materna: desagregar la información a nivel departamental permite tomar decisiones acertadas en base a realidades locales. </p>
+    <p>Los gráficos de la derecha contextualizan esta vista detalle a nivel departamentos con información adicional de tipo socioeconómico para la provincia.</p>
+
+    <hr />
+
+    <div class="tabbable tabs-left">
+      <ul id="filtros" class="nav nav-tabs">
+        <li class="nav-header">Datos por departamento</li>
+
+        <li class="active">
+          <a href="#" rel="tooltip" title="Representa la relación porcentual entre las muertes maternas con residencia en este departamento y la totalidad de muertes maternas de toda la provincia. La leyenda aclara los valores de los matices.">
+            <span class="badge-custom" style="background-color: green;"></span> Proporción de muertes maternas
+          </a>
+        </li>
+        <li>
+          <a href="#" rel="tooltip" title="Es el número de muertes maternas con residencia en este departamento.">
+            <span class="badge-custom" style="background-color: grey;"></span> Cantidad de muertes por residencia
+          </a>
+        </li>
+        <li>
+          <a href="#" rel="tooltip" title="Es el número de muertes maternas que ocurrieron en este departamento.">
+            <span class="badge-custom" style="background-color: blue;"></span> Cantidad de muertes por ocurrencia
+          </a>
+        </li>
+        <hr />
+        <li class="nav-header" rel="tooltip" title="Elija el año sobre el cual quiere conocer los datos.">Año <span class="label label-info pull-right" id="slider-current-year">2010</span></li>
+        <li class="navbar-text"><div id="slider" class="slider"></div></li>
+      </ul>
+
+      <div class="tab-content" style="overflow: hidden;">
+        <div class="row-fluid">
+          <div class="span5">
+            <div id="map-canvas"></div>
+          </div>
+          <div class="span7">
+            <div>
+              <p>En el año X [año] Y [cantidad de muertes ese año] mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atención del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este año fue de Z [tasa de MM].</p>
+              <div id="grafico_uno"></div>
+            </div>
+            <hr />
+            <div>
+              <p>Lorem ipsum dolom</p>
+              <div id="grafico_dos"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

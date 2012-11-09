@@ -10,6 +10,16 @@ $app->get('/', function () use ($app) {
     return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
 })->bind('homepage');
 
+$app->get('/provincial', function () use ($app) {
+    $html = $app['twig']->render('detalle_provincial.html.twig');
+    return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
+})->bind('provincial');
+
+$app->get('/odm', function () use ($app) {
+    $html = $app['twig']->render('odm.html.twig');
+    return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
+})->bind('odm');
+
 $app->get('/nosotros', function () use ($app) {
     $html = $app['twig']->render('nosotros.html.twig');
     return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));

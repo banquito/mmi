@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% set active = 'homepage' %}
+
+{% block title %}Objetivo del milenio{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Plataforma de monitoreo de la mortalidad materna</h2>
+</div>
+
+<p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales y enriquecerla con otras dimensiones de análisis para hacer visible un problema complejo y a la vez evitable que padecen muchas mujeres de nuestro país.</p>
+
+<ul class="nav nav-tabs" id="main-tabs">
+  <li class="active pull-right"><a href="{{ path("odm") }}">ODM</a></li>
+  <li class="pull-right"><a href="{{ path("provincial") }}">Provincia</a></li>
+  <li class="pull-right"><a href="{{ path("homepage") }}">País</a></li>
+</ul>
+
+<section id="main-content">
+  <div class="row-fluid">
+    <h4>La mortalidad materna y el Objetivo del Milenio 5</h4>
+    <p>La reducción en tres cuartas partes de la tasa de la mortalidad materna en el año 2015 es el 5to de los <a href="http://www.undp.org/content/undp/es/home/mdgoverview/" target="_blank">Objetivos de Desarrollo del Milenio</a>. Argentina ha asumido este compromiso [LINK A http://www.politicassociales.gov.ar/odm/), que se convirtió en uno de los ejes prioritarios de las políticas de salud del actual gobierno nacional.</p>
+    <p>El siguiente gráfico ilustra la evolución de la tasa materna desde el año 1990 y permite estimar, de continuar la tendencia observada, cuál será el resultado alcanzado en el 2015.</small></p>
+    <hr />
+
+    Acá va el grafico
+  </div>
+</section>
+{% endblock %}

@@ -11,9 +11,9 @@
 <p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales y enriquecerla con otras dimensiones de análisis para hacer visible un problema complejo y a la vez evitable que padecen muchas mujeres de nuestro país.</p>
 
 <ul class="nav nav-tabs" id="main-tabs">
-  <li class="pull-right"><a href="#">ODM</a></li>
-  <li class="pull-right"><a href="#">Provincia</a></li>
-  <li class="active pull-right"><a href="#">País</a></li>
+  <li class="pull-right"><a href="{{ path("odm") }}">ODM</a></li>
+  <li class="pull-right"><a href="{{ path("provincial") }}">Provincia</a></li>
+  <li class="active pull-right"><a href="{{ path("homepage") }}">País</a></li>
 </ul>
 
 <section id="main-content">
@@ -72,7 +72,7 @@
           </a>
         </li>
         <hr />
-        <li class="nav-header">Año <span class="label label-info pull-right" id="slider-current-year">2010</span></li>
+        <li class="nav-header" rel="tooltip" title="Elija el año sobre el cual quiere conocer los datos.">Año <span class="label label-info pull-right" id="slider-current-year">2010</span></li>
         <li class="navbar-text"><div id="slider" class="slider"></div></li>
       </ul>
 
@@ -98,10 +98,10 @@
   </div>
 </section>
 
-<div id="popup-directas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="popup-directas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="popup-directas-titulo" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Grupo de causas de muerte directas</h3>
+    <h3 id="popup-directas-titulo">Grupo de causas de muerte directas</h3>
   </div>
   <div class="modal-body">
     Cargando contenido ...
@@ -111,10 +111,10 @@
   </div>
 </div>
 
-<div id="popup-indirectas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="popup-indirectas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="popup-indirectas-titulo" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Grupo de causas de muerte indirectas</h3>
+    <h3 id="popup-indirectas-titulo">Grupo de causas de muerte indirectas</h3>
   </div>
   <div class="modal-body">
     Cargando contenido ...
