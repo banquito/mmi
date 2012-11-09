@@ -14,7 +14,7 @@ $(document).ready(function() {
 
     $("#filtros li a").click(function(e){
         e.preventDefault();
-        //$(this).tab('show');
+        $(this).tab('show');
     });
 
     $("#main-tabs li a").click(function(e){
