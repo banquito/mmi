@@ -29,7 +29,7 @@
           <a href="#" rel="tooltip" title="Este valor representa la relación entre las muertes maternas en un año  y la cantidad de nacidos vivos, como aproximación al total de embarazos en ese año (por 10 mil). Indica el riesgo de morir por causas maternas.La leyenda aclara los valores de los matices cromáticos del mapa.">Tasas de mortalidad materna</a>
         </li>
         <hr />
-        <li class="nav-header">Grupo de causas de muerte directas <i href="#popup-grupo-directas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
+        <li class="nav-header">Grupo de causas de muerte directas <i href="{{ path("popup", {template: "causas_directas"}) }}" data-target="#popup-directas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
         <li class="active">
           <a href="#" title="">
             <span class="badge-custom" style="background-color: green;"></span> Embarazo terminado en aborto
@@ -60,7 +60,7 @@
             <span class="badge-custom" style="background-color: red;"></span> Sepsis
           </a>
         </li>
-        <li class="nav-header">Grupo de causas de muerts indirectas <i href="#popup-grupo-indirectas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
+        <li class="nav-header">Grupo de causas de muerts indirectas <i href="{{ path("popup", {template: "causas_indirectas"}) }}" data-target="#popup-indirectas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
         <li>
           <a href="#" title="">
             <span class="badge-custom" style="background-color: red;"></span> Enfermedad por V.I.H.
@@ -98,29 +98,30 @@
   </div>
 </section>
 
-<div id="popup-grupo-directas" data-remote="{{ path("popup", {template: "causas_directas"}) }}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="popup-directas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">Grupo de causas de muerte directas</h3>
   </div>
   <div class="modal-body">
-
+    Cargando contenido ...
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
   </div>
 </div>
 
-<div id="popup-grupo-indirectas" data-remote="{{ path("popup", {template: "causas_indirectas"}) }}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="popup-indirectas" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">Grupo de causas de muerte indirectas</h3>
   </div>
   <div class="modal-body">
-
+    Cargando contenido ...
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
   </div>
 </div>
+
 {% endblock %}
