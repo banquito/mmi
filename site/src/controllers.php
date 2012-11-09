@@ -30,6 +30,11 @@ $app->get('/contacto', function () use ($app) {
     return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
 })->bind('contacto');
 
+$app->get('/popup/{template}', function ($template) use ($app) {
+    $html = $app['twig']->render('popups/'.$template.'.html.twig');
+    return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
+})->bind('popup');
+
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
         return;

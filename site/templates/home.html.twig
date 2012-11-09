@@ -8,7 +8,7 @@
   <h2>Plataforma de monitoreo de la mortalidad materna</h2>
 </div>
 
-<p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales, enriquecerla con información descriptiva y hacer un seguimiento de sus indicadores para brindar una visión más profunda del problema y en definitiva, buscar un futuro mejor para las mujeres de nuestro país.</p>
+<p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales y enriquecerla con otras dimensiones de análisis para hacer visible un problema complejo y a la vez evitable que padecen muchas mujeres de nuestro país.</p>
 
 <ul class="nav nav-tabs" id="main-tabs">
   <li class="pull-right"><a href="#">ODM</a></li>
@@ -18,20 +18,59 @@
 
 <section id="main-content">
   <div class="row-fluid">
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      <strong>Tip!</strong> Seleccione alguno de los indicadores y elija el año sobre el cual quiere conocer los datos. El mapa mostrará la distribución de la información seleccionada a nivel provincial.
+    </div>
+
     <div class="tabbable tabs-left">
       <ul id="filtros" class="nav nav-tabs">
-        <li><a href="#">Tasas de mortalidad materna</a></li>
+        <li>
+          <a href="#" rel="tooltip" title="Este valor representa la relación entre las muertes maternas en un año  y la cantidad de nacidos vivos, como aproximación al total de embarazos en ese año (por 10 mil). Indica el riesgo de morir por causas maternas.La leyenda aclara los valores de los matices cromáticos del mapa.">Tasas de mortalidad materna</a>
+        </li>
         <hr />
-        <li class="nav-header">Grupo de causas de muerte directas</li>
-        <li class="active"><a href="#"><span class="badge-custom" style="background-color: green;"></span> Embarazo terminado en aborto</a></li>
-        <li><a href="#"><span class="badge-custom" style="background-color: grey;"></span> Trastornos hipertensivos</a></li>
-        <li><a href="#"><span class="badge-custom" style="background-color: blue;"></span> Tarstornos de placenta y hemorragias</a></li>
-        <li><a href="#"><span class="badge-custom" style="background-color: yellow;"></span> Otras causas directas</a></li>
-        <li><a href="#"><span class="badge-custom" style="background-color: yellow;"></span> Hemorragia posparto</a></li>
-        <li><a href="#"><span class="badge-custom" style="background-color: red;"></span> Sepsis</a></li>
-        <li class="nav-header">Grupo de causas de muerts indirectas</li>
-        <li><a href="#"><span class="badge-custom" style="background-color: red;"></span> Enfermedad por V.I.H.</a></li>
-        <li><a href="#"><span class="badge-custom" style="background-color: red;"></span> Otras causas indirectas</a></li>
+        <li class="nav-header">Grupo de causas de muerte directas <i href="#popup-grupo-directas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
+        <li class="active">
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: green;"></span> Embarazo terminado en aborto
+          </a>
+        </li>
+        <li>
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: grey;"></span> Trastornos hipertensivos
+          </a>
+        </li>
+        <li>
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: blue;"></span> Tarstornos de placenta y hemorragias
+          </a>
+        </li>
+        <li>
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: yellow;"></span> Otras causas directas
+          </a>
+        </li>
+        <li>
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: yellow;"></span> Hemorragia posparto
+          </a>
+        </li>
+        <li>
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: red;"></span> Sepsis
+          </a>
+        </li>
+        <li class="nav-header">Grupo de causas de muerts indirectas <i href="#popup-grupo-indirectas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
+        <li>
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: red;"></span> Enfermedad por V.I.H.
+          </a>
+        </li>
+        <li>
+          <a href="#" title="">
+            <span class="badge-custom" style="background-color: red;"></span> Otras causas indirectas
+          </a>
+        </li>
         <hr />
         <li class="nav-header">Año <span class="label label-info pull-right" id="slider-current-year">2010</span></li>
         <li class="navbar-text"><div id="slider" class="slider"></div></li>
@@ -59,4 +98,29 @@
   </div>
 </section>
 
+<div id="popup-grupo-directas" data-remote="{{ path("popup", {template: "causas_directas"}) }}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Grupo de causas de muerte directas</h3>
+  </div>
+  <div class="modal-body">
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+  </div>
+</div>
+
+<div id="popup-grupo-indirectas" data-remote="{{ path("popup", {template: "causas_indirectas"}) }}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Grupo de causas de muerte indirectas</h3>
+  </div>
+  <div class="modal-body">
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+  </div>
+</div>
 {% endblock %}

@@ -1,0 +1,15 @@
+# Project files
+/log/*
+/cache/*
+/misc
+
+# SCM files
+.DS_Store
+.arch-params
+.bzr
+_darcs
+.git
+.hg
+.monotone
+.svn
+CVS

@@ -22,6 +22,11 @@ $(document).ready(function() {
         $(this).tab('show');
     });
 
+    $('ul#filtros').tooltip({
+      selector: "a[rel=tooltip]",
+      placement: "right",
+    })
+
     inicializarMapa();
 });
 
