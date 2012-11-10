@@ -86,139 +86,34 @@
     </style>
 
     <script type="text/javascript">
-      google.load('visualization', '1', { packages: ['corechart'] });
-
-      /**
-       * Sector type mapped to a style rule.
-       * @type {Object}
-       * @const
-       */
-      var LAYER_STYLES = {
-        'tasa': {
-          'min': 0,
-          'max': 18,
-          'colors': [
-            '#f4cccc',
-            '#ea9999',
-            '#e06666',
-            '#cc0000',
-            '#990000'
-          ]
-        },
-		'causa': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#f4cccc',
-            '#ea9999',
-            '#e06666',
-            '#cc0000',
-            '#990000'
-          ]
-        },
-		'Aborto_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#8181F7',
-            '#2E2EFE',
-            '#0101DF',
-            '#08088A',
-            '#0B0B3B'
-          ]
-        },
-		'T_Hipert_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#F6CECE',
-            '#F78181',
-            '#FE2E2E',
-            '#DF0101',
-            '#8A0808'
-          ]
-        },
-		'T_Placenta_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#F2F5A9',
-            '#F4FA58',
-            '#FFFF00',
-            '#D7DF01',
-            '#868A08'
-          ]
-        },
-		'Otras_directas_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#81F781',
-            '#58FA58',
-            '#01DF01',
-            '#088A08',
-            '#0B3B0B'
-          ]
-        },
-		'Hemorragia_post_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#F5A9E1',
-            '#FA58D0',
-            '#FF00BF',
-            '#B40486',
-            '#610B4B'
-          ]
-        },
-		'Sepsis_y_O_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#A9F5F2',
-            '#58FAF4',
-            '#00FFFF',
-            '#04B4AE',
-            '#0B615E'
-          ]
-        },
-		'Enf_por_VIH_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#F6CEF5',
-            '#F5A9F2',
-            '#FA58F4',
-            '#FF00FF',
-            '#B404AE'
-          ]
-        },
-		'Otras_ind_P': {
-          'min': 0,
-          'max': 100,
-          'colors': [
-            '#D0F5A9',
-            '#ACFA58',
-            '#80FF00',
-            '#5FB404',
-            '#38610B'
-          ]
-        }
-      }
+		google.load('visualization', '1', { packages: ['corechart'] });
+		
+		var LAYER_STYLES = {
+			'tasa': {'min': 0, 'max': 18, 'colors': ['#f4cccc','#ea9999','#e06666','#cc0000','#990000']},
+			'causa': {'min': 0, 'max': 100, 'colors': ['#f4cccc', '#ea9999', '#e06666', '#cc0000', '#990000']},
+			'Aborto_P': {'min': 0, 'max': 100, 'colors': ['#8181F7', '#2E2EFE', '#0101DF', '#08088A', '#0B0B3B']},
+			'T_Hipert_P': {'min': 0, 'max': 100, 'colors': ['#F6CECE', '#F78181', '#FE2E2E', '#DF0101', '#8A0808']},
+			'T_Placenta_P': {'min': 0, 'max': 100, 'colors': ['#F2F5A9', '#F4FA58', '#FFFF00', '#D7DF01', '#868A08']},
+			'Otras_directas_P': {'min': 0, 'max': 100, 'colors': ['#81F781', '#58FA58', '#01DF01', '#088A08', '#0B3B0B']},
+			'Hemorragia_post_P': {'min': 0, 'max': 100, 'colors': ['#F5A9E1', '#FA58D0', '#FF00BF', '#B40486', '#610B4B']},
+			'Sepsis_y_O_P': {'min': 0, 'max': 100, 'colors': ['#A9F5F2', '#58FAF4', '#00FFFF', '#04B4AE', '#0B615E']},
+			'Enf_por_VIH_P': {'min': 0, 'max': 100, 'colors': ['#F6CEF5', '#F5A9F2', '#FA58F4', '#FF00FF', '#B404AE']},
+			'Otras_ind_P': {'min': 0, 'max': 100, 'colors': ['#D0F5A9', '#ACFA58', '#80FF00', '#5FB404', '#38610B']}
+		}
 
 
-	  var layer = null;
-      function initialize() {
-		var type = $('input[name=group1]:checked').val();
-		var anio = '2010';
-		var map = new google.maps.Map(document.getElementById('map-canvas'), {
-          center: new google.maps.LatLng(-38.416097, -63.616672),
-          zoom: 4,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          zoomControlOptions: {
-            style: google.maps.ZoomControlStyle.SMALL
-          },
-        });
+		var layer = null;
+		function initialize() {
+			var type = $('input[name=group1]:checked').val();
+			var anio = '2010';
+			var map = new google.maps.Map(document.getElementById('map-canvas'), {
+				center: new google.maps.LatLng(-38.416097, -63.616672),
+				zoom: 4,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				zoomControlOptions: {
+					style: google.maps.ZoomControlStyle.SMALL
+				},
+			});
 		
 		$( "#anio" ).text( "2010" );
 		
@@ -286,9 +181,9 @@
             e.infoWindowHtml =jQuery.validator.format(e.infoWindowHtml, tasa)
 			e.infoWindowHtml = "<label>Tasa de mortalidad:</label><p>"+tasa+"</p><br /><a href='\DetalleProvincia.html?"+parametros+"' >detalle de provincia</a>";*/
 			if (type = "tasa"){
-				e.infoWindowHtml = $('#infoWindowTemplateTasa').tmpl(jQuery.parseJSON(e.row)).get(0).outerHTML;
+				e.infoWindowHtml = $('#infoWindowTemplateTasa').tmpl(e.row).get(0).outerHTML;
 			}else{
-				e.infoWindowHtml = $('#infoWindowTemplateCausa').tmpl(jQuery.parseJSON(e.row)).get(0).outerHTML;
+				e.infoWindowHtml = $('#infoWindowTemplateCausa').tmpl(e.row).get(0).outerHTML;
 			}
 		});
       }
@@ -473,7 +368,44 @@
         map.setMapTypeId('map-style');
       }
 	  
-	  function drawVisualizationTasasProvincias()
+		function drawVisualizationTasasProvincias(){			
+			var data = google.visualization.arrayToDataTable([
+			  ['Año', 'Tasa'],
+			  [2006,  4.8],
+			  [2007,  4.4],
+			  [2008,  4.0],
+			  [2009,  5.5],
+			  [2010,  4.4]			
+			]);
+			
+			/*var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Año'); // Implicit domain label col.
+			data.addColumn('number', 'Tasa'); // Implicit series 1 data col.
+			data.addColumn({type:'number', role:'interval'});  // interval role col.
+			data.addColumn({type:'number', role:'interval'});  // interval role col.
+			data.addRows([
+				['2006', 4.8, 2, 4.8],
+				['2007', 4.4, 2, 4.4],
+				['2008', 4.0, 2, 4.0],
+				['2009', 5.5, 2, 5.5],
+				['2010', 4.4, 2, 4.4]
+			]);*/
+			
+			var options = {
+				title: 'Evolucion de la tasa de muerte materna 2006-2010',			
+				height: 400,
+				width: 500,
+				vAxis: { minValue: 3, baseline: 3, gridlines :{color: '#BBB', count: 7}},
+				hAxis: { gridlines :{color: '#DDD', count: 5}, format:'####'},
+				legend: { position: "none" },
+				series: [{color: '#cc0000', pointSize:6}]
+			};
+			
+			var chart = new google.visualization.LineChart(document.getElementById('visualization'));
+			chart.draw(data, options);
+		}
+	  
+	  /*function drawVisualizationTasasProvincias()
 	  {
 		$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20'provincia','2006','2007','2008','2009','2010'%20FROM%201X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
 			var datatable = new google.visualization.DataTable();
@@ -500,7 +432,7 @@
 			var chart = new google.visualization.LineChart(document.getElementById('visualization'));
 			chart.draw(datatable, options);
 		});
-	  }
+	  }*/
 	  
 	  function drawVisualizationCausas(anio) {
         google.visualization.drawChart({
@@ -706,7 +638,8 @@
 				</form>
 			</div>
 			<div class="span5"><div id="map-canvas"></div></div>
-			<div class="span4">En el a&ntilde;o X [a&ntilde;o] Y [cantidad de muertes ese a&ntilde;o] mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atenci&oacute;n del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este a&ntilde;o fue de Z [tasa de MM]. <div id="visualization2"></div><div id="visualization"></div></div>
+			<div class="span4">En el a&ntilde;o X [a&ntilde;o] Y [cantidad de muertes ese a&ntilde;o] mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atenci&oacute;n del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este a&ntilde;o fue de Z [tasa de MM]. 
+			<div id="visualization2"></div><div id="visualization"></div></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span2" >
@@ -719,11 +652,12 @@
 	
 	<script id="infoWindowTemplateTasa" type="text/x-jquery-tmpl"> 
 		<div class='googft-info-window' style='font-family: sans-serif'>
-			Provincia: XXXprovincia. </br>
+			Provincia: ${provincia.value}. </br>
 			Tasa de mortalidad materna:XXX </br>
 			Tasa global de fecundidad 2010: XXX </br>
-			Proporción de egresos por abortos: XXX </br>  
-			Proporción de nacidos vivos atendidos por personal capacitado: XXX
+			Proporci&oacute;n de egresos por abortos: XXX </br>  
+			Proporci&oacute;n de nacidos vivos atendidos por personal capacitado: XXX </br>
+			<a href='DetalleProvincia.html?provincia=${provincia.value}' >detalle de provincia</a>
 		</div>
 	</script>
     <script id="infoWindowTemplateCausa" type="text/x-jquery-tmpl"> 
@@ -733,7 +667,6 @@
 			un xx% sobre el total de las muertes obstétricas de esta provincia.
 		</div>
 	</script>
-	
-	
+		
   </body>
 </html>
