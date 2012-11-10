@@ -3,8 +3,44 @@ body {
   padding-bottom: 40px;
 }
 a {
-   outline: 0!important;
+  outline: 0!important;
+  color: #187E87;
 }
+
+a:link {
+  color: #187E87;
+  }     
+
+a:visited {
+  color: #C28E25;
+  }  
+
+ a:hover {
+  color: #1C98A4;
+  text-decoration: none;
+}
+
+.lead {
+  margin-bottom: 11px;
+  font-size: 17px;
+  font-weight: 200;
+  line-height: 24.5px;
+}
+
+h3 {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  line-height: 32px;
+  font-size: 19.5px;
+}
+
+h4 {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 17px;
+  padding-bottom: 0px;
+}
+
 .sidebar-nav {
   padding: 9px 0;
 }
@@ -18,6 +54,12 @@ a {
   font-family:  verdana, sans-serif;
 }
 */
+
+.page-header {
+  padding-bottom: 1.5px;
+  margin: 11px 0 11.5px;
+  border-bottom: 1px solid #eeeeee;
+}
 .badge-custom {
   border-radius: 9px 9px 9px 9px;
   width: 8px;
@@ -33,3 +75,10 @@ a {
   width: auto;
   height: 590px
 }
+
+.brand { 
+  font-weight: 600;
+  color: #056B74;
+  font-family:  verdana, sans-serif;
+}
+
