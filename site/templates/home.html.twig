@@ -25,54 +25,54 @@
 
     <div class="tabbable tabs-left">
       <ul id="filtros" class="nav nav-tabs">
-        <li>
-          <a href="#" rel="tooltip" title="Este valor representa la relación entre las muertes maternas en un año  y la cantidad de nacidos vivos, como aproximación al total de embarazos en ese año (por 10 mil). Indica el riesgo de morir por causas maternas.La leyenda aclara los valores de los matices cromáticos del mapa.">Tasas de mortalidad materna</a>
+        <li class="active">
+          <a href="#" rel="tooltip" title="Este valor representa la relación entre las muertes maternas en un año  y la cantidad de nacidos vivos, como aproximación al total de embarazos en ese año (por 10 mil). Indica el riesgo de morir por causas maternas.La leyenda aclara los valores de los matices cromáticos del mapa." value="tasa">Tasas de mortalidad materna</a>
         </li>
         <hr />
         <li class="nav-header">Grupo de causas de muerte directas <i href="{{ path("popup", {template: "causas_directas"}) }}" data-target="#popup-directas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
-        <li class="active">
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: green;"></span> Embarazo terminado en aborto
+        <li>
+          <a href="#" title="" value="Aborto_P">
+            <span class="badge-custom" style="background-color: #3366cc;"></span> Embarazo terminado en aborto
           </a>
         </li>
         <li>
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: grey;"></span> Trastornos hipertensivos
+          <a href="#" title="" value="T_Hipert_P">
+            <span class="badge-custom" style="background-color: #dc3912;"></span> Trastornos hipertensivos
           </a>
         </li>
         <li>
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: blue;"></span> Tarstornos de placenta y hemorragias
+          <a href="#" title="" value="T_Placenta_P">
+            <span class="badge-custom" style="background-color: #ff9900;"></span> Tarstornos de placenta y hemorragias
           </a>
         </li>
         <li>
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: yellow;"></span> Otras causas directas
+          <a href="#" title="" value="Otras_directas_P">
+            <span class="badge-custom" style="background-color: #109618;"></span> Otras causas directas
           </a>
         </li>
         <li>
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: yellow;"></span> Hemorragia posparto
+          <a href="#" title="" value="Hemorragia_post_P">
+            <span class="badge-custom" style="background-color: #990099;"></span> Hemorragia posparto
           </a>
         </li>
         <li>
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: red;"></span> Sepsis
+          <a href="#" title="" value="Sepsis_y_O_P">
+            <span class="badge-custom" style="background-color: #0099c6;"></span> Sepsis
           </a>
         </li>
         <li class="nav-header">Grupo de causas de muerts indirectas <i href="{{ path("popup", {template: "causas_indirectas"}) }}" data-target="#popup-indirectas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
         <li>
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: red;"></span> Enfermedad por V.I.H.
+          <a href="#" title="" value="Enf_por_VIH_P">
+            <span class="badge-custom" style="background-color: #dd4477;"></span> Enfermedad por V.I.H.
           </a>
         </li>
         <li>
-          <a href="#" title="">
-            <span class="badge-custom" style="background-color: red;"></span> Otras causas indirectas
+          <a href="#" title="" value="Otras_ind_P">
+            <span class="badge-custom" style="background-color: #66aa00;"></span> Otras causas indirectas
           </a>
         </li>
         <hr />
-        <li class="nav-header" rel="tooltip" title="Elija el año sobre el cual quiere conocer los datos.">Año <span class="label label-info pull-right" id="slider-current-year">2010</span></li>
+        <li class="nav-header" rel="tooltip" title="Elija el año sobre el cual quiere conocer los datos.">Año <span class="label label-info pull-right" id="anio">2010</span></li>
         <li class="navbar-text"><div id="slider" class="slider"></div></li>
       </ul>
 
@@ -84,15 +84,16 @@
           <div class="span7">
             <div>
               <p>En el año X [año] Y [cantidad de muertes ese año] mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atención del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este año fue de Z [tasa de MM].</p>
-              <div id="grafico_uno"></div>
+			  <div id="visualization2"></div>
             </div>
-            <hr />
             <div>
-              <p>Lorem ipsum dolom</p>
-              <div id="grafico_dos"></div>
+				<div id="visualization"></div>
             </div>
           </div>
         </div>
+		<div class="row-fluid">
+				<div id="visualization-tabla"></div>
+		</div>
       </div>
     </div>
   </div>
@@ -124,4 +125,525 @@
   </div>
 </div>
 
+<script id="infoWindowTemplateTasa" type="text/x-jquery-tmpl"> 
+	<div class='googft-info-window' style='font-family: sans-serif'>
+		Provincia: ${provincia.value}. </br>
+		Tasa de mortalidad materna:XXX </br>
+		Tasa global de fecundidad 2010: XXX </br>
+		Proporci&oacute;n de egresos por abortos: XXX </br>  
+		Proporci&oacute;n de nacidos vivos atendidos por personal capacitado: XXX </br>
+		<a href='provincial?provincia=${provincia.value}' >detalle de provincia</a>
+	</div>
+</script>
+<script id="infoWindowTemplateCausa" type="text/x-jquery-tmpl"> 
+	<div class='googft-info-window' style='font-family: sans-serif'>
+		XX mujeres que residían en [NOMBRE PROVINCIA] </br> 
+		murieron en el año XX por [CAUSA Y], </br>
+		un xx% sobre el total de las muertes obstétricas de esta provincia.
+	</div>
+</script>
+
+{% endblock %}
+
+{% block css %}
+<style type="text/css">
+      body { padding-top: 60px; }
+	  
+	  #map-canvas {
+        width: auto;
+		height:550px
+      }
+
+      #legend {
+        background: #FFF;
+        margin: 10px;
+        padding: 5px;
+        width: 120px;
+      }
+
+      #legend p {
+        font-weight: bold;
+        margin-top: 3px;
+      }
+
+      #legend div {
+        clear: both;
+      }
+
+      .color {
+        height: 12px;
+        width: 12px;
+        margin-right: 3px;
+        float: left;
+        display: block;
+      }
+
+      .high {
+        color: #F00;
+      }
+
+      .medium {
+        color: #0F0;
+      }
+
+      .low {
+        color: #00F;
+      }
+
+      .high, .medium, .low {
+        font-weight: bold;
+     }
+      
+       .brand { 
+        font-weight:600;
+        color:#056B74;
+        font-family:  verdana, sans-serif;
+      }
+   
+    </style>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+		google.load('visualization', '1', { packages: ['corechart'] });
+		
+		var LAYER_STYLES = {
+			'tasa': {'min': 0, 'max': 18, 'colors': ['#f4cccc','#ea9999','#e06666','#cc0000','#990000']},
+			'causa': {'min': 0, 'max': 100, 'colors': ['#f4cccc', '#ea9999', '#e06666', '#cc0000', '#990000']},
+			'Aborto_P': {'min': 0, 'max': 100, 'colors': ['#8181F7', '#2E2EFE', '#0101DF', '#08088A', '#0B0B3B']},
+			'T_Hipert_P': {'min': 0, 'max': 100, 'colors': ['#F6CECE', '#F78181', '#FE2E2E', '#DF0101', '#8A0808']},
+			'T_Placenta_P': {'min': 0, 'max': 100, 'colors': ['#F2F5A9', '#F4FA58', '#FFFF00', '#D7DF01', '#868A08']},
+			'Otras_directas_P': {'min': 0, 'max': 100, 'colors': ['#81F781', '#58FA58', '#01DF01', '#088A08', '#0B3B0B']},
+			'Hemorragia_post_P': {'min': 0, 'max': 100, 'colors': ['#F5A9E1', '#FA58D0', '#FF00BF', '#B40486', '#610B4B']},
+			'Sepsis_y_O_P': {'min': 0, 'max': 100, 'colors': ['#A9F5F2', '#58FAF4', '#00FFFF', '#04B4AE', '#0B615E']},
+			'Enf_por_VIH_P': {'min': 0, 'max': 100, 'colors': ['#F6CEF5', '#F5A9F2', '#FA58F4', '#FF00FF', '#B404AE']},
+			'Otras_ind_P': {'min': 0, 'max': 100, 'colors': ['#D0F5A9', '#ACFA58', '#80FF00', '#5FB404', '#38610B']}
+		}
+
+
+		var layer = null;
+		function initialize() {
+			var type = 'tasa';
+			var anio = '2010';
+			var map = new google.maps.Map(document.getElementById('map-canvas'), {
+				center: new google.maps.LatLng(-38.416097, -63.616672),
+				zoom: 4,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				zoomControlOptions: {
+					style: google.maps.ZoomControlStyle.SMALL
+				},
+			});
+		
+		$( "#anio" ).text( "2010" );
+		
+		$( "#slider" ).slider({
+			value:2010,
+			min: 2006,
+			max: 2010,
+			step: 1,
+			slide: function( event, ui ) {
+				$( "#anio" ).text( ui.value );
+				anio = ui.value;											
+				if (type == "tasa"){
+					updateLayerQuery(layer, type);
+					styleLayerBySector(layer, anio, type);
+					drawVisualizationTablaTasa(anio);
+				}else{
+					updateLayerQuery(layer, "causa", anio);
+					styleLayerBySector(layer, type, type);
+					drawVisualizationCausas(anio)
+					drawVisualizationTabla(anio)						
+				}					
+			}
+		});
+			
+		$("#filtros li a").click(function(e){
+			e.preventDefault();
+			$(this).tab('show');
+			type = this.attributes["value"].nodeValue;
+			if (type == "tasa"){
+				updateLayerQuery(layer, type);
+				styleLayerBySector(layer, anio, type);
+				updateLegend(type);
+				//drawVisualizationTablaTasa(anio);
+				$("#visualization").empty();	
+				drawVisualizationTasasProvincias();
+				$("#visualization2").empty();					
+			}else{
+				updateLayerQuery(layer, "causa", anio);
+				styleLayerBySector(layer, type, type);
+				updateLegend(type);
+				drawVisualizationCausas(anio);
+				drawVisualizationCausasTotales();
+				drawVisualizationTabla(anio);
+			}
+		});
+
+		$('ul#filtros').tooltip({
+		  selector: "[rel=tooltip]",
+		  placement: "right",
+		})
+		
+		$("#provincias").change(function () {
+			updateLayerQuery(layer, "depResidencia", anio, $("#provincias").val());
+			$("#visualization").empty();
+			$("#visualization-tabla").empty();
+		});
+
+        layer = new google.maps.FusionTablesLayer();
+        updateLayerQuery(layer, type);
+        layer.setMap(map);
+
+        createLegend(map, type);
+        styleLayerBySector(layer, anio, type);
+        styleMap(map);
+		drawVisualizationTasasProvincias();
+		drawVisualizationTablaTasa(anio);
+		
+		google.maps.event.addListener(layer, 'click', function(e) {
+			/*var provincia = e.row["provincia"].value
+			var tasa = e.row[$( "#anio" ).text()].value;
+			var parametros = jQuery.param({ provincia:provincia});
+            e.infoWindowHtml =jQuery.validator.format(e.infoWindowHtml, tasa)
+			e.infoWindowHtml = "<label>Tasa de mortalidad:</label><p>"+tasa+"</p><br /><a href='\DetalleProvincia.html?"+parametros+"' >detalle de provincia</a>";*/
+			if (type = "tasa"){
+				e.infoWindowHtml = $('#infoWindowTemplateTasa').tmpl(e.row).get(0).outerHTML;
+			}else{
+				e.infoWindowHtml = $('#infoWindowTemplateCausa').tmpl(e.row).get(0).outerHTML;
+			}
+		});
+      }
+	  
+	function getInfoWindow(row, type)
+	{
+
+	}	  
+	  
+	  function updateLayerQuery(layer, type, anio, provincia) {			
+		var where = "";
+		if (type == "causa"){			
+			if (anio) {
+				where += " anio = '" + anio + "'";
+			}
+			
+			layer.setOptions({
+			  query: {
+				select: 'geometry',
+				from: '1u1_H_d5X6DaGQHsIewtDYev1dsL8HWDhjj-NTP0',
+				where: where
+			  }
+			});
+		}
+        if (type == "tasa"){
+			layer.setOptions({
+			  query: {
+				select: 'kml', 
+				from: '1X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ'				
+			  }
+			});
+		}
+		if(type == "depResidencia"){				
+			var where = "";
+			if (provincia) {
+				where += " residencia contains ignoring case '" + provincia + "' and anio = '" + anio + "'";
+			}
+			layer.setOptions({
+				query: {
+				select: "kml",
+				from: '1ktI6a8YHXAtOytgP538buvOYuA5CwCOFkC5UK6Q',
+				where: where
+				}
+			});
+			
+			var styles = new Array();
+			styles.push({
+				group: "codigo_residencia",
+				where: "count < 2",
+				polygonOptions: {
+				  fillColor: '#f4cccc',
+				  fillOpacity: 1
+				}
+			  });
+			
+			layer.set('styles', styles);			
+		}
+      }
+	  
+	  function ProvinciaDetalle(provincia, lat, lng)
+		{
+			updateLayerQuery(layer, "tasa");
+				
+			layer.e.setZoom(6);
+			layer.e.setCenter(new google.maps.LatLng(lat, lng));	
+			drawVisualization(provincia);
+			drawVisualizationCodMuer(provincia);
+			
+			return false;
+	 }
+	  
+
+      function createLegend(map, type) {
+        var legendWrapper = document.createElement('div');
+        legendWrapper.id = 'legendWrapper';
+        legendWrapper.index = 1;
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+            legendWrapper);
+        legendContent(legendWrapper, type);
+      }
+	  
+	  function updateLegend(type) {
+		var legendWrapper = $("#legendWrapper");
+		legendWrapper.empty();
+        legendContent(legendWrapper, type);
+      }
+
+      function legendContent(legendWrapper, type) {
+	    var sector = type;
+        var legend = document.createElement('div');
+        legend.id = 'legend';
+
+        var title = document.createElement('p');
+        title.innerHTML = sector;
+        legend.appendChild(title);
+
+        var layerStyle = LAYER_STYLES[sector];
+        var colors = layerStyle.colors;
+        var minNum = layerStyle.min;
+        var maxNum = layerStyle.max;
+        var step = (maxNum - minNum) / colors.length;
+        for (var i = 0; i < colors.length; i++) {
+          var legendItem = document.createElement('div');
+
+          var color = document.createElement('div');
+          color.setAttribute('class', 'color');
+          color.style.backgroundColor = colors[i];
+          legendItem.appendChild(color);
+
+          var newMin = minNum + step * i;
+          var newMax = newMin + step;
+          var minMax = document.createElement('span');
+          minMax.innerHTML = newMin + ' - ' + newMax;
+          legendItem.appendChild(minMax);
+
+          legend.appendChild(legendItem);
+        }
+
+        legendWrapper.appendChild(legend);
+      }
+
+      function updateLegend(sector) {
+        var legendWrapper = document.getElementById('legendWrapper');
+        var legend = document.getElementById('legend');
+        legendWrapper.removeChild(legend);
+        legendContent(legendWrapper, sector);
+      }
+
+      function styleLayerBySector(layer, anio, type) {
+        var layerStyle = LAYER_STYLES[type];
+        var colors = layerStyle.colors;
+        var minNum = layerStyle.min;
+        var maxNum = layerStyle.max;
+        var step = (maxNum - minNum) / colors.length;
+
+        var styles = new Array();
+        for (var i = 0; i < colors.length; i++) {
+          var newMin = minNum + step * i;
+          styles.push({
+            where: generateWhere(newMin, anio),
+            polygonOptions: {
+              fillColor: colors[i],
+              fillOpacity: 1
+            }
+          });
+        }
+        layer.set('styles', styles);
+      }
+
+      function generateWhere(minNum, column) {
+        var whereClause = new Array();
+        whereClause.push("'");
+		whereClause.push(column);
+        whereClause.push("' >= ");
+        whereClause.push(minNum);
+        return whereClause.join('');
+      }
+
+      function styleMap(map) {
+        var style = [{
+          featureType: 'all',
+          stylers: [{
+            saturation: -99
+          }]
+        }, {
+          featureType: 'poi',
+          stylers: [{
+            visibility: 'off'
+          }]
+        }, {
+          featureType: 'road',
+          stylers: [{
+            visibility: 'off'
+          }]
+        }];
+
+        var styledMapType = new google.maps.StyledMapType(style, {
+          map: map,
+          name: 'Styled Map'
+        });
+        map.mapTypes.set('map-style', styledMapType);
+        map.setMapTypeId('map-style');
+      }
+	  
+		function drawVisualizationTasasProvincias(){			
+			var data = google.visualization.arrayToDataTable([
+			  ['Año', 'Tasa'],
+			  [2006,  4.8],
+			  [2007,  4.4],
+			  [2008,  4.0],
+			  [2009,  5.5],
+			  [2010,  4.4]			
+			]);
+
+			var options = {
+				title: 'Evolucion de la tasa de muerte materna 2006-2010',			
+				height: 400,
+				width: 500,
+				vAxis: { minValue: 3, baseline: 3, gridlines :{color: '#BBB', count: 7}},
+				hAxis: { gridlines :{color: '#DDD', count: 5}, format:'####'},
+				legend: { position: "none" },
+				series: [{color: '#cc0000', pointSize:6}]
+			};
+			
+			var chart = new google.visualization.LineChart(document.getElementById('visualization'));
+			chart.draw(data, options);
+		}
+	  
+	  function drawVisualizationCausas(anio) {
+        google.visualization.drawChart({
+          containerId: "visualization",
+          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+          query: "SELECT 'provincia', 'Aborto' as 'Embarazo terminado en aborto', 'T_Hipert' as 'Trastornos hipertensivos', 'T_Placenta' as 'Trastornos de placenta y hemorragias', 'Otras_directas' as 'Otras causas directas', 'Hemorragia_post'  as 'Hemorragia postparto', 'Sepsis_y_O' as 'Sepsis', 'Enf_por_VIH' as 'Enfermedad por V.I.H.', 'Otras_ind' as 'Otras causas indirectas' " +
+              "FROM 1hCiTDcyuaZaqzQ11roxhvvL8cmVdZZxoLnTXQS4 WHERE anio = '" + anio + "' and provincia = 'total'",
+          chartType: "ColumnChart",
+          options: {
+            title: "Causas " + anio,
+            height: 250,
+            width: "auto",
+			chartArea:{left:30,top:20,width:"60%",height:"80%"},
+			animation:{
+				duration: 10000,
+				easing: 'linear'
+			}	
+          }
+        });
+      }
+	  
+	  function drawVisualizationCausasTotales(){
+		google.visualization.drawChart({
+          containerId: "visualization2",
+          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+          query: "SELECT 'anio', 'Aborto' as 'Embarazo terminado en aborto','T_Hipert' as 'Trastornos hipertensivos','T_Placenta' as 'Trastornos de placenta y hemorragias','Otras_directas' as 'Otras causas directas','Hemorragia_post' as 'Hemorragia postparto', 'Sepsis_y_O' as 'Sepsis', 'Enf_por_VIH' as 'Enfermedad por V.I.H.', 'Otras_ind' as 'Otras causas indirectas' " +
+              "FROM 1hCiTDcyuaZaqzQ11roxhvvL8cmVdZZxoLnTXQS4 WHERE provincia = 'total' ORDER BY 'anio'",
+          chartType: "AreaChart",
+          options: {
+            title: "Causas Totales por año",
+            height: 400,
+            width: "auto",
+			hAxis: { format:'####'},
+			chartArea:{left:30,top:20,width:"60%",height:"80%"},
+			isStacked:true,
+			animation:{
+				duration: 10000,
+				easing: 'linear'
+			}	
+          }
+        });
+	  } 
+	 
+	  function drawVisualizationTabla(anio) {
+        google.visualization.drawChart({
+          containerId: "visualization-tabla",
+          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+          query: "SELECT 'provincia', 'Aborto','T_Hipert','T_Placenta','Otras_directas','Hemorragia_post', 'Sepsis_y_O', 'Enf_por_VIH', 'Otras_ind' " +
+              "FROM 1hCiTDcyuaZaqzQ11roxhvvL8cmVdZZxoLnTXQS4 WHERE anio = '" + anio + "'",
+          chartType: "Table",
+          options: {
+            title: "Causas " + anio,
+            height: 400,
+            width: "100%"
+          }
+        });
+      }
+	  
+	  function drawVisualizationTablaTasa(anio) {
+        google.visualization.drawChart({
+          containerId: "visualization-tabla",
+          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+          query: "SELECT 'provincia', '" + anio + "' " +
+              "FROM 1X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ",
+          chartType: "Table",
+          options: {
+            title: "Tasas " + anio,
+            height: 400,
+            width: "100%"
+          }
+        });
+      }
+	  
+	  function drawVisualization(provincia) {
+        google.visualization.drawChart({
+          containerId: "visualization-tabla",
+          dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+          query: "SELECT provincia,'2006','2007','2008','2009','2010' " +
+              "FROM 1X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ WHERE provincia = '" + provincia + "'",
+          chartType: "ColumnChart",
+          options: {
+            title: "Causas" + provincia,
+            height: 400,
+            width: auto
+          }
+        });
+      }
+	  
+	  function drawVisualizationCodMuer(provincia) {
+			var tablename = "";
+			if ($( "#anio" ).text() == "2010")
+			{
+				tablename = "1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk";
+			}
+			if ($( "#anio" ).text() == "2009")
+			{
+				tablename = "1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk";
+			}
+			if ($( "#anio" ).text() == "2008")
+			{
+				tablename = "1AUODHy9FzxuXrdA6XFneBsAnglRNUnbAilkuGuU";
+			}
+			if ($( "#anio" ).text() == "2007")
+			{
+				tablename = "1oii1zpRYUyYyn5ux1GTzLjXJpOBYL44XQR3bLhw";
+			}
+			if ($( "#anio" ).text() == "2006")
+			{
+				tablename = "1i9UlJDDVcjYz8oWwTY-_6ZXW64QO2TOzvLmn8m4";
+			}
+				  
+			google.visualization.drawChart({
+			   containerId: "visualization2",
+			   dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+			   query:"SELECT  CODMUER, count() FROM " + tablename + " WHERE OCURRENCIA contains ignoring case '"+ provincia + "' GROUP BY CODMUER" ,
+			   refreshInterval: 5,
+			   chartType: "PieChart",
+			   options: {
+				  alternatingRowStyle: true,
+				  showRowNumber : true,
+				  title: provincia,
+				  height: 800,
+                  width: 600
+			   }
+			});
+		}
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+</script>
 {% endblock %}

@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Las mujeres cuentan - {% block title %}{% endblock %}</title>
-    
-    <link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap-spacelab.min.css">
-    <!-- link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap.min.css" -->
+		
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
-
-    {% block css %}{% endblock %}
-
     <link rel="stylesheet" href="{{ app.request.basepath }}/css/styles.css">
-
     <link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap-responsive.min.css">
+	<link rel="stylesheet" href="{{ app.request.basepath }}/css/bootstrap-spacelab.css">
+	
+    {% block css %}{% endblock %}
 
     <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>  
     <![endif]-->
-
     
     <!--[if IE]>
         <script type="text/javascript">
@@ -87,12 +83,11 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	<script type='text/javascript' src='http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js'></script>
 
 
     <script src="{{ app.request.basepath }}/js/bootstrap.min.js"></script>
 
     {% block js %}{% endblock %}
-
-    <script src="{{ app.request.basepath }}/js/scripts.js"></script>
 </body>
 </html>

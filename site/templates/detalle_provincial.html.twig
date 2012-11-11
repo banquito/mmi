@@ -19,7 +19,7 @@
 <section id="main-content">
   <div class="row-fluid">
   
-    <h4>Las mujeres y la muerte materna en "Mendoza"</h4>
+    <h4>Las mujeres y la muerte materna <span id="nombre-provincia"></span></h4>
 
     <p>La distribución de las muertes maternas varía mucho de provincia en provincia, en parte por la cantidad de mujeres residentes en cada una de ellas, en parte por las condiciones en las que ocurre la atención del embarazo, parto y puerperio. El seguimiento local de los  Objetivos del Milenio, incorporó la meta de disminuir en un 10% la brecha existente entre las provincias, con respecto a los <a href="{{ path("odm") }}">índices resultantes del año 1990</a>.</p>
     <p>Las brechas económicas existentes en el país se reflejan en variaciones en los valores de la tasa de muerte materna: desagregar la información a nivel departamental permite tomar decisiones acertadas en base a realidades locales. </p>
@@ -31,25 +31,87 @@
       <ul id="filtros" class="nav nav-tabs">
         <li class="nav-header">Datos por departamento</li>
 
-        <li class="active">
+        <li>
           <a href="#" rel="tooltip" title="Representa la relación porcentual entre las muertes maternas con residencia en este departamento y la totalidad de muertes maternas de toda la provincia. La leyenda aclara los valores de los matices.">
             <span class="badge-custom" style="background-color: green;"></span> Proporción de muertes maternas
           </a>
         </li>
-        <li>
-          <a href="#" rel="tooltip" title="Es el número de muertes maternas con residencia en este departamento.">
+        <li class="active">
+          <a href="#" rel="tooltip" value="residencia"  title="Es el número de muertes maternas con residencia en este departamento.">
             <span class="badge-custom" style="background-color: grey;"></span> Cantidad de muertes por residencia
           </a>
         </li>
         <li>
-          <a href="#" rel="tooltip" title="Es el número de muertes maternas que ocurrieron en este departamento.">
+          <a href="#" rel="tooltip" value="ocurrencia" title="Es el número de muertes maternas que ocurrieron en este departamento.">
             <span class="badge-custom" style="background-color: blue;"></span> Cantidad de muertes por ocurrencia
           </a>
         </li>
         <hr />
-        <li class="nav-header" rel="tooltip" title="Elija el año sobre el cual quiere conocer los datos.">Año <span class="label label-info pull-right" id="slider-current-year">2010</span></li>
+        <li class="nav-header" rel="tooltip" title="Elija el año sobre el cual quiere conocer los datos.">Año <span class="label label-info pull-right" id="anio">2010</span></li>
         <li class="navbar-text"><div id="slider" class="slider"></div></li>
-      </ul>
+		<hr />
+		<li class="nav-header" rel="tooltip" title="Seleccione del men&uacute; la provincia a visualizar, puede cambiar de provincia">Elegir provincia</li>
+		<li class="navbar-text">
+			<select id="provincia11" style="margin-left: 20px; width: 250px;">
+				<option value="-1">-- Seleccionar --</option>
+				<option value="Buenos Aires">Buenos Aires</option>
+				<option value="Buenos Aires Capital">Capital Federal</option>
+				<option value="Catamarca">Catamarca</option>
+				<option value="Chaco">Chaco</option>
+				<option value="Chubut">Chubut</option>
+				<option value="Cordoba">Cordoba</option>
+				<option value="Corrientes">Corrientes</option>
+				<option value="Entre Rios">Entre Rios</option>
+				<option value="Formosa">Formosa</option>
+				<option value="Jujuy">Jujuy</option>
+				<option value="La Pampa">La Pampa</option>
+				<option value="La Rioja">La Rioja</option>
+				<option value="Mendoza">Mendoza</option>
+				<option value="Misiones">Misiones</option>
+				<option value="Neuquen">Neuquen</option>
+				<option value="Rio Negro">Rio Negro</option>
+				<option value="Salta">Salta</option>
+				<option value="San Juan">San Juan</option>
+				<option value="San Luis">San Luis</option>
+				<option value="Santa Cruz">Santa Cruz</option>
+				<option value="Santa Fe">Santa Fe</option>
+				<option value="Santiago del Estero">Santiago del Estero</option>
+				<option value="Tierra del Fuego">Tierra del Fuego</option>
+				<option value="Tucuman">Tucuman</option>
+			</select>
+		</li>
+		<hr />
+		<li class="nav-header" rel="tooltip" title="Seleccione del men&uacute; una provincia para comparar con la provincia que ya est&aacute; visualizando">Comparar con</li>
+		<li class="navbar-text">
+			<select id="provincia2" style="margin-left: 20px; width: 250px;">
+				<option value="-1">-- Seleccionar --</option>
+				<option value="Buenos Aires">Buenos Aires</option>
+				<option value="Buenos Aires Capital">Capital Federal</option>
+				<option value="Catamarca">Catamarca</option>
+				<option value="Chaco">Chaco</option>
+				<option value="Chubut">Chubut</option>
+				<option value="Cordoba">Cordoba</option>
+				<option value="Corrientes">Corrientes</option>
+				<option value="Entre Rios">Entre Rios</option>
+				<option value="Formosa">Formosa</option>
+				<option value="Jujuy">Jujuy</option>
+				<option value="La Pampa">La Pampa</option>
+				<option value="La Rioja">La Rioja</option>
+				<option value="Mendoza">Mendoza</option>
+				<option value="Misiones">Misiones</option>
+				<option value="Neuquen">Neuquen</option>
+				<option value="Rio Negro">Rio Negro</option>
+				<option value="Salta">Salta</option>
+				<option value="San Juan">San Juan</option>
+				<option value="San Luis">San Luis</option>
+				<option value="Santa Cruz">Santa Cruz</option>
+				<option value="Santa Fe">Santa Fe</option>
+				<option value="Santiago del Estero">Santiago del Estero</option>
+				<option value="Tierra del Fuego">Tierra del Fuego</option>
+				<option value="Tucuman">Tucuman</option>
+			</select>
+		</li>
+	  </ul>
 
       <div class="tab-content" style="overflow: hidden;">
         <div class="row-fluid">
@@ -58,18 +120,590 @@
           </div>
           <div class="span7">
             <div>
-              <p>En el año X [año] Y [cantidad de muertes ese año] mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atención del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este año fue de Z [tasa de MM].</p>
-              <div id="grafico_uno"></div>
+				<p>En el a&ntilde;o X [a&ntilde;o] Y [cantidad de muertes ese a&ntilde;o] mujeres murieron en esta provincia durante el embarazo, parto o posparto por diversas causas . La tasa de muerte materna de la provincia para este año fue de W [tasa de MM], a W-Z [tasa de MM de la provincia – tasa de MM nacional] puntos de la tasa nacional.</p>
+				<div id="visualization-1"></div>
+				<select id="type-visualization-1">
+					<option value="donde-ocurrio">Donde Ocurrio</option>
+					<option value="covertura-medica">Covertura Medica</option>
+					<option value="atencion-medica">Atencion Medica</option>					
+					<option value="nivel-instruccion">Nivel Instruccion</option>
+					<option value="edad">Edad</option>
+				</select>
             </div>
             <hr />
             <div>
-              <p>Lorem ipsum dolom</p>
-              <div id="grafico_dos"></div>
+				<div id="visualization-2"></div>
+				<select id="type-visualization-2">
+					<option value="edad">Edad</option>
+					<option value="covertura-medica">Covertura Medica</option>
+					<option value="atencion-medica">Atencion Medica</option>
+					<option value="donde-ocurrio">Donde Ocurrio</option>
+					<option value="nivel-instruccion">Nivel Instruccion</option>					
+				</select>
             </div>
           </div>
         </div>
+		<hr>
+		<div id="comparador" class="row-fluid" style="display:none">
+			<div class="span5"><div id="map-canvas2"></div></div>
+			<div class="span7">						
+				<div id="visualization-3"></div>
+				<select id="type-visualization-3">
+					<option value="donde-ocurrio">Donde Ocurrio</option>
+					<option value="covertura-medica">Covertura Medica</option>
+					<option value="atencion-medica">Atencion Medica</option>					
+					<option value="nivel-instruccion">Nivel Instruccion</option>
+					<option value="edad">Edad</option>
+				</select>
+				<div id="visualization-4"></div>
+				<select id="type-visualization-4">
+					<option value="edad">Edad</option>
+					<option value="covertura-medica">Covertura Medica</option>
+					<option value="atencion-medica">Atencion Medica</option>
+					<option value="donde-ocurrio">Donde Ocurrio</option>
+					<option value="nivel-instruccion">Nivel Instruccion</option>					
+				</select>
+			</div>
+		</div>
       </div>
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block css %}
+	<style type="text/css">
+		body { padding-top: 60px; }
+	  
+		#map-canvas { width: auto; height: 500px; }
+	  
+		#map-canvas2 { width: auto; height: 500px;}
+
+		#legend {
+			background: #FFF;
+			margin: 10px;
+			padding: 5px;
+			width: 100px;
+		}
+
+		#legend p {
+			font-weight: bold;
+			margin-top: 3px;
+		}
+
+		#legend div { clear: both; }
+
+		.color {
+			height: 12px;
+			width: 12px;
+			margin-right: 3px;
+			float: left;
+			display: block;
+		}
+
+		.high { color: #F00; }
+
+		.medium { color: #0F0; }
+
+		.low { color: #00F; }
+
+		.high, .medium, .low { font-weight: bold; }
+      
+		.brand { 
+			font-weight:600;
+			color:#056B74;
+			font-family:  verdana, sans-serif;
+		}  
+    </style>
+{% endblock %}
+
+{% block js %}
+
+<script type="text/javascript">
+		google.load('visualization', '1', { packages: ['corechart'] });
+	
+		var LAYER_STYLES = {
+			'escala': {'min': 0,'max': 18,'colors': ['#ea9999','#e06666','#cc0000','#990000']}
+		}
+	
+		function getParameterByName(name){
+			name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			var regexS = "[\\?&]" + name + "=([^&#]*)";
+			var regex = new RegExp(regexS);
+			var results = regex.exec(window.location.search);
+			if(results == null)
+				return "";
+			else
+				return decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+
+		var layer = null;
+		var layerComp = null;
+		var layerDep = null;
+		var layerDepComp = null;
+		var anio = null;
+		var type = null;
+		var provincia = null;
+		var provinciaComp = null;
+		var map = null
+		var mapComp = null;
+	
+		function initialize() {
+			type = 'residencia';
+			anio = '2010';			
+			$( "#anio" ).text( "2010" );
+			provincia = getParameterByName("provincia");
+			provincia2 = "";
+			$("#provincia11").val(provincia);
+					
+			setProvincia();
+						
+			$( "#slider" ).slider({
+				value:2010, min: 2006, max: 2010, step: 1,
+				slide: function( event, ui ) {
+					$( "#anio" ).text( ui.value );
+					anio = ui.value;
+					updateLayerQuery(layer, type, anio, provincia);								
+					styleLayerBySector(layer, type);
+					drawChartVisualization(anio, provincia, "visualization-1");
+					drawChartVisualization(anio, provincia, "visualization-2");
+					drawChartVisualization(anio, provincia2, "visualization-3");
+					drawChartVisualization(anio, provincia2, "visualization-4");
+				}
+			});	
+			
+			$("#filtros li a").click(function(e){
+				e.preventDefault();
+				$(this).tab('show');
+				type = this.attributes["value"].nodeValue;	
+				updateLayerQuery(layer, type, anio, provincia);			
+				updateLegend(type);
+				styleLayerBySector(layer, type);				
+			});
+
+			$('ul#filtros').tooltip({
+				selector: "[rel=tooltip]",
+				placement: "right",
+			})
+		
+			$("#provincia11").change(function () {
+				provincia = $("#provincia11").val();
+				setProvincia();
+			});
+			
+			$("#provincia2").change(function () {
+				provincia2 = $("#provincia2").val();
+				$("#comparador").show();
+				setProvincia2();
+			});
+			
+			$("#type-visualization-1").change(function(){
+				drawChartVisualization(anio, provincia, "visualization-1")
+			});
+			
+			$("#type-visualization-2").change(function(){
+				drawChartVisualization(anio, provincia, "visualization-2")
+			});
+			
+			$("#type-visualization-3").change(function(){
+				drawChartVisualization(anio, provincia, "visualization-3")
+			});
+			
+			$("#type-visualization-4").change(function(){
+				drawChartVisualization(anio, provincia, "visualization-4")
+			});
+		}
+	
+		function setProvincia(){
+			var zoom = 6;
+			if (provincia == "")
+				zoom = 4;
+					
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({ 'address': "Argentina," + provincia}, function(results,status){
+				var latitude = results[0].geometry.location.lat();
+				var longitude = results[0].geometry.location.lng();
+					
+				var map = new google.maps.Map(document.getElementById('map-canvas'), {
+					center: new google.maps.LatLng(latitude, longitude),
+					zoom: zoom,
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					zoomControlOptions: {
+						style: google.maps.ZoomControlStyle.SMALL
+					},
+				});
+					
+				if (provincia != "")
+					$("#nombre-provincia")[0].textContent = "en " + provincia;
+					
+				layerDep = new google.maps.FusionTablesLayer();
+				drawLayerDepartamentos(layerDep, provincia);
+				layerDep.setMap(map);
+					
+				layer = new google.maps.FusionTablesLayer();
+				updateLayerQuery(layer, type, anio, provincia);
+				layer.setMap(map);
+
+				createLegend(map, type);
+				styleLayerBySector(layer, type);
+				styleMap(map);			
+				drawVisualizationDondeOcurrio(anio, provincia, "visualization-1")
+				drawVisualizationEdad(anio, provincia, "visualization-2")
+			});
+		}
+		
+		function setProvincia2(){					
+			var geocoder = new google.maps.Geocoder();
+			geocoder.geocode({ 'address': "Argentina," + provincia2}, function(results,status){
+				var latitude = results[0].geometry.location.lat();
+				var longitude = results[0].geometry.location.lng();
+					
+				var map = new google.maps.Map(document.getElementById('map-canvas2'), {
+					center: new google.maps.LatLng(latitude, longitude),
+					zoom: 6,
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					zoomControlOptions: {
+						style: google.maps.ZoomControlStyle.SMALL
+					},
+				});
+					
+				layerDepComp = new google.maps.FusionTablesLayer();
+				drawLayerDepartamentos(layerDepComp, provincia2);
+				layerDepComp.setMap(map);
+					
+				layerComp = new google.maps.FusionTablesLayer();
+				updateLayerQuery(layerComp, type, anio, provincia2);
+				layerComp.setMap(map);
+
+				createLegend(map, type);
+				styleLayerBySector(layerComp, type);
+				styleMap(map);			
+				drawVisualizationDondeOcurrio(anio, provincia2, "visualization-3")
+				drawVisualizationEdad(anio, provincia2, "visualization-4")
+			});
+		}
+		
+		function drawChartVisualization(anio, provincia, visualization){
+			var typeVisualization = $("#type-" + visualization).val();
+
+			if (typeVisualization == "donde-ocurrio")
+				drawVisualizationDondeOcurrio(anio, provincia, visualization)
+				
+			if (typeVisualization == "covertura-medica")
+				drawVisualizationCoverturaMedica(anio, provincia, visualization)
+				
+			if (typeVisualization == "atencion-medica")
+				drawVisualizationAtencionMedica(anio, provincia, visualization)
+				
+			if (typeVisualization == "nivel-instruccion")
+				drawVisualizationNivelInstruccion(anio, provincia, visualization)
+				
+			if (typeVisualization == "edad")
+				drawVisualizationEdad(anio, provincia, visualization)
+		}
+		  
+		function drawLayerDepartamentos(layerDep, provincia){
+			var where = "";
+			if (provincia) {
+				where += " provNombre contains ignoring case '" + provincia + "'";
+			}
+			layerDep.setOptions({
+			  query: { 
+				select: 'kml',
+				from: '1OOIdn0U28iYbA280ccw_DRr3iiv27AKumWEbbus',
+				where: where
+			  }
+			});
+		}
+		  
+		function setStyleLayerDep(layerDep){
+			var styles = new Array();
+			styles.push({			
+				polygonOptions: {
+				  fillColor: '#f4cccc',
+				  fillOpacity: 1
+				}
+			  });
+			
+			layerDep.set('styles', styles);
+		}
+		  
+		function updateLayerQuery(layer, type, anio, provincia) {			
+			var where = "";
+			if (anio) {
+				where += " anio = '" + anio + "'";
+			}
+
+			if (type == "residencia"){			
+				where += "and residencia contains ignoring case '" + provincia + "'";
+				
+				layer.setOptions({
+				  query: {
+					select: 'kml',
+					from: '1v4L4iF0UNl7_1i5t8KNeZOu43J5Z7wnu4Xoz7lI',
+					where: where
+				  }
+				});
+			}
+			if (type == "ocurrencia"){
+				where += "and ocurrencia contains ignoring case '" + provincia + "'";
+				
+				layer.setOptions({
+				  query: {
+					select: 'kml',
+					from: '1alHU2f9TvZxXw7akRkZGXYDloVIwTEb_UBJn52c',
+					where: where
+				  }
+				});
+			}
+			if(type == "depResidencia"){	
+				var where = "";
+				if (provincia) {
+					where += " residencia contains ignoring case '" + provincia + "' and anio = '" + anio + "'";
+				}
+				layer.setOptions({
+					query: {
+					select: "kml",
+					from: '1ktI6a8YHXAtOytgP538buvOYuA5CwCOFkC5UK6Q',
+					where: where
+					}
+				});			
+			}
+		}
+		  
+		function ProvinciaDetalle(provincia, lat, lng){
+			updateLayerQuery(layer, "tasa");
+				
+			layer.e.setZoom(6);
+			layer.e.setCenter(new google.maps.LatLng(lat, lng));	
+			drawVisualization(provincia);
+			drawVisualizationCodMuer(provincia);
+			
+			return false;
+		}
+		  
+		function createLegend(map, type) {
+			var legendWrapper = document.createElement('div');
+			legendWrapper.id = 'legendWrapper';
+			legendWrapper.index = 1;
+			map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+				legendWrapper);
+			legendContent(legendWrapper, type);
+		}
+		  
+		function updateLegend(type) {
+			var legendWrapper = $("#legendWrapper");
+			legendWrapper.empty();
+			legendContent(legendWrapper, type);
+		}
+
+		function legendContent(legendWrapper, type) {
+			var sector = "escala";
+			var legend = document.createElement('div');
+			legend.id = 'legend';
+
+			var title = document.createElement('p');
+			title.innerHTML = sector;
+			legend.appendChild(title);
+
+			var layerStyle = LAYER_STYLES[sector];
+			var colors = layerStyle.colors;
+			var minNum = layerStyle.min;
+			var maxNum = layerStyle.max;
+			var step = (maxNum - minNum) / colors.length;
+			for (var i = 0; i < colors.length; i++) {
+				var legendItem = document.createElement('div');
+
+				var color = document.createElement('div');
+				color.setAttribute('class', 'color');
+				color.style.backgroundColor = colors[i];
+				legendItem.appendChild(color);
+
+				var newMin = minNum + step * i;
+				var newMax = newMin + step;
+				var minMax = document.createElement('span');
+				minMax.innerHTML = newMin + ' - ' + newMax;
+				legendItem.appendChild(minMax);
+
+				legend.appendChild(legendItem);
+			}
+
+			legendWrapper.appendChild(legend);
+		}
+
+		function updateLegend(sector) {
+			var legendWrapper = document.getElementById('legendWrapper');
+			var legend = document.getElementById('legend');
+			legendWrapper.removeChild(legend);
+			legendContent(legendWrapper, sector);
+		}
+
+		function styleLayerBySector(layer, type) {
+			var layerStyle = LAYER_STYLES["escala"];
+			var colors = layerStyle.colors;
+			var minNum = layerStyle.min;
+			var maxNum = layerStyle.max;
+			var step = (maxNum - minNum) / colors.length;
+
+			var styles = new Array();
+			for (var i = 0; i < colors.length; i++) {
+			  var newMin = minNum + step * i;
+			  styles.push({
+				where: generateWhere(newMin, "total"),
+				polygonOptions: {
+				  fillColor: colors[i],
+				  fillOpacity: 1
+				}
+			  });
+			}
+			layer.set('styles', styles);
+		}
+
+		function generateWhere(minNum, column) {
+			var whereClause = new Array();
+			whereClause.push("'");
+			whereClause.push(column);
+			whereClause.push("' >= ");
+			whereClause.push(minNum);
+			return whereClause.join('');
+		}
+
+		function styleMap(map){
+			var style = [{
+			  featureType: 'all',
+			  stylers: [{
+				saturation: -99
+			  }]
+			}, {
+			  featureType: 'poi',
+			  stylers: [{
+				visibility: 'off'
+			  }]
+			}, {
+			  featureType: 'road',
+			  stylers: [{
+				visibility: 'off'
+			  }]
+			}];
+
+			var styledMapType = new google.maps.StyledMapType(style, {
+			  map: map,
+			  name: 'Styled Map'
+			});
+			map.mapTypes.set('map-style', styledMapType);
+			map.setMapTypeId('map-style');
+		}
+		  
+		function drawVisualizationCoverturaMedica(anio, provincia, visualization){
+			google.visualization.drawChart({
+			  containerId: visualization,
+			  dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+			  query: "SELECT asociad, count() " +
+				  "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
+				  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
+				  "group by asociad",
+			  chartType: "PieChart",
+			  options: {
+				title: "Cobertura Medica ",
+				height: 220,
+				width: 400,
+				animation:{
+					duration: 1000,
+					easing: 'out',
+				}
+			  }
+			});
+		}
+		  
+		function drawVisualizationAtencionMedica(anio, provincia, visualization) {
+			google.visualization.drawChart({
+			  containerId: visualization,
+			  dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+			  query: "SELECT atenmed, count() " +
+				  "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
+				  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
+				  "group by atenmed	",
+			  chartType: "PieChart",
+			  options: {
+				title: "Atencion Medica ",
+				height: 220,
+				width: "auto"
+			  }
+			});
+		}
+		  
+		function drawVisualizationDondeOcurrio(anio, provincia, visualization) {
+			google.visualization.drawChart({
+			  containerId: visualization,
+			  dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
+			  query: "SELECT ocloc, count() " +
+				  "FROM 1ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM " +
+				  "WHERE anio = '"+anio+"' and residencia contains ignoring case '"+provincia+"' " +
+				  "group by ocloc	",
+			  chartType: "PieChart",
+			  options: {
+				title: "Donde Ocurrio",
+				height: 220,
+				width: "auto"
+			  }
+			});
+		}
+		  
+		function drawVisualizationNivelInstruccion(anio, provincia, visualization) {
+			$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20anio,%20finstruc,%20count()%20as%20count%20FROM%201ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM%20WHERE%20residencia%20contains%20ignoring%20case%20\'"+provincia+"\'%20group%20by%20finstruc,%20anio&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
+				var datatable = new google.visualization.DataTable();
+				var columns = ["0", "1", "2", "3", "4", "5", "6", "7", "9", "11", "12", "13", "14", "99" ];
+				var columnsNames = ["0", "Nunca asistió", "Primario Incompleto", "Primario Completo", "Secundario incompleto", "Secundario completo", "Superior o Universitario incompleto", "Superior o Universitario completo", "9", "Ciclos EGB (1 y 2) incompletos", "Ciclos EGB (1 y 2) completos", "Ciclo EGB 3 incompleto", "Ciclo EGB 3 completo", "Se ignora" ];
+				var rows = [ "2006", "2007", "2008", "2009", "2010"];
+				datatable.addColumn("string", "Anio");
+				$.each(columnsNames, function(key, columnName) {
+						datatable.addColumn("number", columnName);
+				});	
+				datatable.addRows(5);
+				$.each(data.rows, function(key, row) {
+					datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), parseInt(row[2]));			
+				});
+				
+				var options = {
+					hAxis: {title: 'Anio',  titleTextStyle: {color: 'red'}},
+					isStacked:true,
+					height: 350,
+					width: "auto",
+					title: "Nivel de instruccion"
+				};
+				
+				var chart = new google.visualization.ColumnChart(document.getElementById(visualization));
+				chart.draw(datatable, options);
+			});
+		}
+		  
+		function drawVisualizationEdad(anio, provincia, visualization) {
+			$.getJSON("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT%20anio,%20grupedad,%20count()%20as%20count%20FROM%201ZU1BLsX-kccWHMR4o8N52rRE8EruBX7sXeuuYnM%20WHERE%20residencia%20contains%20ignoring%20case%20\'"+provincia+"\'%20group%20by%20grupedad,%20anio&key=AIzaSyAkMTT3cQYD2XFfgtGQPmjd9OeMilKHYTo", function(data) {
+				var datatable = new google.visualization.DataTable();
+				var columns = ["0", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55" ];
+				var rows = [ "2006", "2007", "2008", "2009", "2010"];
+				datatable.addColumn("string", "Anio");
+				$.each(columns, function(key, columnName) {
+						datatable.addColumn("number", columnName);
+				});	
+				datatable.addRows(5);
+				$.each(data.rows, function(key, row) {
+					datatable.setCell(jQuery.inArray(row[0], rows), (jQuery.inArray(row[1], columns)+1), parseInt(row[2]));				
+				});
+				
+				var options = {				
+					isStacked:true,
+					height: 350,
+					width: "auto",
+					title: "Edad"
+				};
+				
+				var chart = new google.visualization.ColumnChart(document.getElementById(visualization));
+				chart.draw(datatable, options);
+			});	
+		}
+
+		google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+	
 {% endblock %}
