@@ -4,12 +4,11 @@
 {% block title %}Detalle provincial{% endblock %}
 
 {% block content %}
-<!--div class="page-header">
+<div class="page-header">
   <h2>Plataforma de monitoreo de la mortalidad materna</h2>
-</div-->
+</div>
 
-<p>La distribución de las muertes maternas varía mucho de provincia en provincia, en parte por la cantidad de mujeres residentes en cada una de ellas, en parte por las condiciones en las que ocurre la atención del embarazo, parto y puerperio. El seguimiento local de los  <a href="{{ path("odm") }}">Objetivos del Milenio</a>, incorporó la meta de disminuir en un 10% la brecha existente entre las provincias, con respecto a los índices resultantes del año 1990. Las brechas económicas existentes en el país se reflejan en valores dispares de la tasa de muerte materna: desagregar la información a nivel departamental permite tomar decisiones acertadas en base a realidades locales. </p>
-
+<p class="lead"><b>Las mujeres cuentan</b> es una plataforma de monitoreo de la mortalidad materna en Argentina que tiene como propósito hacer pública la información reportada en las estadísticas oficiales y enriquecerla con otras dimensiones de análisis para hacer visible un problema complejo y a la vez evitable que padecen muchas mujeres de nuestro país.</p>
 
 <ul class="nav nav-tabs" id="main-tabs">
   <li class="pull-right"><a href="{{ path("odm") }}">ODM</a></li>
@@ -19,13 +18,12 @@
 
 <section id="main-content">
   <div class="row-fluid">
- <div class="alert">
-      <button type="button" class="close" data-dismiss="alert">×</button>
-      <strong>Tip!</strong> Los gráficos de la derecha contextualizan esta vista detalle a nivel departamentos con información adicional de tipo socioeconómico para la provincia.
-    </div> 
-    <!--h4>Las mujeres y la muerte materna <span id="nombre-provincia"></span></h4-->
+  
+    <h4>Las mujeres y la muerte materna <span id="nombre-provincia"></span></h4>
 
-    
+    <p>La distribución de las muertes maternas varía mucho de provincia en provincia, en parte por la cantidad de mujeres residentes en cada una de ellas, en parte por las condiciones en las que ocurre la atención del embarazo, parto y puerperio. El seguimiento local de los  Objetivos del Milenio, incorporó la meta de disminuir en un 10% la brecha existente entre las provincias, con respecto a los <a href="{{ path("odm") }}">índices resultantes del año 1990</a>.</p>
+    <p>Las brechas económicas existentes en el país se reflejan en variaciones en los valores de la tasa de muerte materna: desagregar la información a nivel departamental permite tomar decisiones acertadas en base a realidades locales. </p>
+    <p>Los gráficos de la derecha contextualizan esta vista detalle a nivel departamentos con información adicional de tipo socioeconómico para la provincia.</p>
 
     <hr />
 
