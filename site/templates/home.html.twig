@@ -209,8 +209,7 @@
 		google.load('visualization', '1', { packages: ['corechart'] });
 		
 		var LAYER_STYLES = {
-			'tasa': {'min': 0, 'max': 18, 'colors': ['#f4cccc','#ea9999','#e06666','#cc0000','#990000']},
-			'causa': {'min': 0, 'max': 100, 'colors': ['#f4cccc', '#ea9999', '#e06666', '#cc0000', '#990000']},
+			'tasa': {'min': 0, 'max': 18, 'colors': ['#f4cccc','#ea9999','#e06666','#cc0000','#990000']},		
 			'Aborto_P': {'min': 0, 'max': 100, 'colors': ['#8181F7', '#2E2EFE', '#0101DF', '#08088A', '#0B0B3B']},
 			'T_Hipert_P': {'min': 0, 'max': 100, 'colors': ['#F6CECE', '#F78181', '#FE2E2E', '#DF0101', '#8A0808']},
 			'T_Placenta_P': {'min': 0, 'max': 100, 'colors': ['#F2F5A9', '#F4FA58', '#FFFF00', '#D7DF01', '#868A08']},
@@ -284,12 +283,6 @@
 		  selector: "[rel=tooltip]",
 		  placement: "right",
 		})
-		
-		$("#provincias").change(function () {
-			updateLayerQuery(layer, "depResidencia", anio, $("#provincias").val());
-			$("#visualization").empty();
-			$("#visualization-tabla").empty();
-		});
 
         layer = new google.maps.FusionTablesLayer();
         updateLayerQuery(layer, type);
@@ -343,31 +336,6 @@
 			  }
 			});
 		}
-		if(type == "depResidencia"){				
-			var where = "";
-			if (provincia) {
-				where += " residencia contains ignoring case '" + provincia + "' and anio = '" + anio + "'";
-			}
-			layer.setOptions({
-				query: {
-				select: "kml",
-				from: '1ktI6a8YHXAtOytgP538buvOYuA5CwCOFkC5UK6Q',
-				where: where
-				}
-			});
-			
-			var styles = new Array();
-			styles.push({
-				group: "codigo_residencia",
-				where: "count < 2",
-				polygonOptions: {
-				  fillColor: '#f4cccc',
-				  fillOpacity: 1
-				}
-			  });
-			
-			layer.set('styles', styles);			
-		}
       }
 	  
 	  function ProvinciaDetalle(provincia, lat, lng)
@@ -381,7 +349,6 @@
 			
 			return false;
 	 }
-	  
 
       function createLegend(map, type) {
         var legendWrapper = document.createElement('div');
@@ -445,8 +412,14 @@
         var minNum = layerStyle.min;
         var maxNum = layerStyle.max;
         var step = (maxNum - minNum) / colors.length;
-
-        var styles = new Array();
+		
+		var styles = new Array();
+		styles.push({
+            polygonOptions: {
+              fillColor: colors[0],
+              fillOpacity: 1
+            }
+		});
         for (var i = 0; i < colors.length; i++) {
           var newMin = minNum + step * i;
           styles.push({
@@ -543,8 +516,8 @@
 		google.visualization.drawChart({
           containerId: "visualization2",
           dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-          query: "SELECT 'anio', 'Aborto' as 'Embarazo terminado en aborto','T_Hipert' as 'Trastornos hipertensivos','T_Placenta' as 'Trastornos de placenta y hemorragias','Otras_directas' as 'Otras causas directas','Hemorragia_post' as 'Hemorragia postparto', 'Sepsis_y_O' as 'Sepsis', 'Enf_por_VIH' as 'Enfermedad por V.I.H.', 'Otras_ind' as 'Otras causas indirectas' " +
-              "FROM 1hCiTDcyuaZaqzQ11roxhvvL8cmVdZZxoLnTXQS4 WHERE provincia = 'total' ORDER BY 'anio'",
+          query: "SELECT 'anio', 'Otras_ind_Tasa' as 'Otras causas indirectas', 'Enf_por_VIH_Tasa' as 'Enfermedad por V.I.H.', 'Sepsis_y_O_Tasa' as 'Sepsis', 'Hemorragia_post_Tasa' as 'Hemorragia postparto', 'Otras_directas_Tasa' as 'Otras causas directas', 'T_Placenta_Tasa' as 'Trastornos de placenta y hemorragias', 'T_Hipert_Tasa' as 'Trastornos hipertensivos', 'Aborto_Tasa' as 'Embarazo terminado en aborto' " +
+              "FROM 1yWn2m1dowQz_sZp5FNToomwJtGWIOJHvS4Bq7gc WHERE provincia = 'total' ORDER BY 'anio'",
           chartType: "AreaChart",
           options: {
             title: "Evolución de tasas de muerte materna por causa 2006-2010",
@@ -553,6 +526,7 @@
 			hAxis: { format:'####'},
 			chartArea:{left:30,top:20,width:"60%",height:"80%"},
 			isStacked:true,
+			colors: ['#66aa00','#dd4477','#0099c6','#990099','#109618','#ff9900','#dc3912','#3366cc'],
 			animation:{
 				duration: 10000,
 				easing: 'linear'
