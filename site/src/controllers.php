@@ -20,6 +20,11 @@ $app->get('/odm', function () use ($app) {
     return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
 })->bind('odm');
 
+$app->get('/contexto', function () use ($app) {
+    $html = $app['twig']->render('contexto.html.twig');
+    return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
+})->bind('contexto');
+
 $app->get('/nosotros', function () use ($app) {
     $html = $app['twig']->render('nosotros.html.twig');
     return new Response($html, 200, array('Cache-Control' => 's-maxage=3600, public'));
