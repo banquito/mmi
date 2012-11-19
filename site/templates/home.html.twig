@@ -20,15 +20,19 @@
 
 <section id="main-content">
   <div class="row-fluid">
-    <div class="alert">
+    <!-- div class="alert">
       <button type="button" class="close" data-dismiss="alert">×</button>
       <strong>Tip!</strong> Seleccione alguno de los indicadores y elija el año sobre el cual quiere conocer los datos. El mapa mostrará la distribución de la información seleccionada a nivel provincial.
-    </div>
+    </div -->
 
     <div class="tabbable tabs-left">
       <ul id="filtros" class="nav nav-tabs">
         <li class="active">
           <a href="#" rel="tooltip" title="Este valor representa la relación entre las muertes maternas en un año  y la cantidad de nacidos vivos, como aproximación al total de embarazos en ese año (por 10 mil). Indica el riesgo de morir por causas maternas.La leyenda aclara los valores de los matices cromáticos del mapa." value="tasa">Tasas de mortalidad materna</a>
+        </li>
+        <hr />
+        <li>
+          <a href="#" rel="tooltip" title="Indicador socioeconómico">Indicador socioeconómico</a>
         </li>
         <hr />
         <li class="nav-header">Grupo de causas de muerte directas <i href="{{ path("popup", {template: "causas_directas"}) }}" data-target="#popup-directas" data-toggle="modal" style="vertical-align: text-bottom; cursor: pointer;" class="icon-question-sign"></i></li>
