@@ -8,7 +8,7 @@
   <h2>Plataforma de monitoreo de la mortalidad materna</h2>
 </div-->
 
-<p>La distribución de las muertes maternas varía mucho de provincia en provincia, en parte por la cantidad de mujeres residentes en cada una de ellas, en parte por las condiciones en las que ocurre la atención del embarazo, parto y puerperio. El seguimiento local de los  <a href="{{ path("odm") }}">Objetivos del Milenio</a>, incorporó la meta de disminuir en un 10% la brecha existente entre las provincias, con respecto a los índices resultantes del año 1990. Las brechas económicas existentes en el país se reflejan en valores dispares de la tasa de muerte materna: desagregar la información a nivel departamental permite tomar decisiones acertadas en base a realidades locales. </p>
+<p>La distribución de las muertes maternas varía mucho de provincia en provincia. El seguimiento local de los <a href="{{ path("odm") }}">Objetivos del Milenio</a>, incorporó la meta de disminuir en un 10% esta brecha existente. Las brechas económicas existentes en el país se reflejan en valores dispares de la tasa de muerte materna: desagregar la información a nivel departamental permite tomar decisiones acertadas en base a realidades locales.</p>
 
 
 <ul class="nav nav-tabs" id="main-tabs">
@@ -130,24 +130,24 @@
 				<p>En el a&ntilde;o X [a&ntilde;o] Y [cantidad de muertes ese a&ntilde;o] mujeres murieron en esta provincia durante el embarazo, parto o posparto por diversas causas . La tasa de muerte materna de la provincia para este año fue de W [tasa de MM], a W-Z [tasa de MM de la provincia – tasa de MM nacional] puntos de la tasa nacional.</p>
 				<div id="visualization-1"></div>
 				<select id="type-visualization-1">
-					<option value="donde-ocurrio">Donde Ocurrio</option>
-					<option value="covertura-medica">Cobertura M&eacute;dica</option>
-					<option value="atencion-medica">Atenci&oacute;n M&eacute;dica</option>					
-					<option value="nivel-instruccion">Nivel Instruccion</option>
-					<option value="edad">Edad</option>
-					<option value="causa">Causa</option>
+					<option value="donde-ocurrio">¿Dónde murieron?</option>
+					<option value="covertura-medica">¿Tenían cobertura médica?</option>
+					<option value="atencion-medica">¿Tuvieron atención médica?</option>					
+					<option value="nivel-instruccion">¿Habían ido a la escuela?</option>
+					<option value="edad">¿Qué edad tenían?</option>
+					<option value="causa">¿Por qué murieron?</option>
 				</select>
             </div>
             <hr />
             <div>
 				<div id="visualization-2"></div>
 				<select id="type-visualization-2">
-					<option value="edad">Edad</option>
-					<option value="covertura-medica">Cobertura M&eacute;dica</option>
-					<option value="atencion-medica">Atenci&oacute;n M&eacute;dica</option>
-					<option value="donde-ocurrio">Donde Ocurrio</option>
-					<option value="nivel-instruccion">Nivel Instruccion</option>
-					<option value="causa">Causa</option>
+					<option value="donde-ocurrio">¿Dónde murieron?</option>
+					<option value="covertura-medica">¿Tenían cobertura médica?</option>
+					<option value="atencion-medica">¿Tuvieron atención médica?</option>					
+					<option value="nivel-instruccion">¿Habían ido a la escuela?</option>
+					<option value="edad">¿Qué edad tenían?</option>
+					<option value="causa">¿Por qué murieron?</option>
 				</select>
             </div>
           </div>
@@ -158,21 +158,21 @@
 			<div class="span7">						
 				<div id="visualization-3"></div>
 				<select id="type-visualization-3">
-					<option value="donde-ocurrio">Donde Ocurrio</option>
-					<option value="covertura-medica">Cobertura M&eacute;dica</option>
-					<option value="atencion-medica">Atenci&oacute;n M&eacute;dica</option>					
-					<option value="nivel-instruccion">Nivel Instruccion</option>
-					<option value="edad">Edad</option>
-					<option value="causa">Causa</option>
+					<option value="donde-ocurrio">¿Dónde murieron?</option>
+					<option value="covertura-medica">¿Tenían cobertura médica?</option>
+					<option value="atencion-medica">¿Tuvieron atención médica?</option>					
+					<option value="nivel-instruccion">¿Habían ido a la escuela?</option>
+					<option value="edad">¿Qué edad tenían?</option>
+					<option value="causa">¿Por qué murieron?</option>
 				</select>
 				<div id="visualization-4"></div>
 				<select id="type-visualization-4">
-					<option value="edad">Edad</option>
-					<option value="covertura-medica">Cobertura M&eacute;dica</option>
-					<option value="atencion-medica">Atenci&oacute;n M&eacute;dica</option>
-					<option value="donde-ocurrio">Donde Ocurrio</option>
-					<option value="nivel-instruccion">Nivel Instruccion</option>
-					<option value="causa">Causa</option>
+					<option value="donde-ocurrio">¿Dónde murieron?</option>
+					<option value="covertura-medica">¿Tenían cobertura médica?</option>
+					<option value="atencion-medica">¿Tuvieron atención médica?</option>					
+					<option value="nivel-instruccion">¿Habían ido a la escuela?</option>
+					<option value="edad">¿Qué edad tenían?</option>
+					<option value="causa">¿Por qué murieron?</option>
 				</select>
 			</div>
 		</div>
@@ -627,7 +627,7 @@
 					width: "auto",
 					height: 300,
 					chartArea:{left:30,top:20,width:"50%",height:"80%"},
-					title: "Cobertura Medica"
+					title: "¿Tenían cobertura médica?"
 				}
 				
 				var chart = new google.visualization.PieChart(document.getElementById(visualization));
@@ -654,7 +654,7 @@
 					width: "auto",
 					height: 300,
 					chartArea:{left:30,top:20,width:"50%",height:"80%"},
-					title: "Atencion Medica"
+					title: "¿Tuvieron atención médica?"
 				}
 				
 				var chart = new google.visualization.PieChart(document.getElementById(visualization));
@@ -681,7 +681,7 @@
 					width: "auto",
 					height: 300,
 					chartArea:{left:30,top:20,width:"50%",height:"80%"},
-					title: "Donde Ocurrio"
+					title: "¿Dónde murieron?"
 				}
 				
 				var chart = new google.visualization.PieChart(document.getElementById(visualization));
@@ -712,7 +712,7 @@
 					height: 300,
 					width: "auto",
 					chartArea:{left:30,top:20,width:"50%",height:"80%"},
-					title: "Nivel de instruccion"
+					title: "¿Habían ido a la escuela?"
 				};
 				
 				var chart = new google.visualization.ColumnChart(document.getElementById(visualization));
@@ -743,7 +743,7 @@
 					height: 300,
 					chartArea:{left:30,top:20,width:"50%",height:"80%"},
 					width: "auto",
-					title: "Edad"
+					title: "¿Qué edad tenían?"
 				};
 				
 				var chart = new google.visualization.ColumnChart(document.getElementById(visualization));
@@ -770,7 +770,7 @@
 					width: "auto",
 					height: 300,
 					chartArea:{left:30,top:20,width:"50%",height:"80%"},
-					title: "Causas"
+					title: "¿Por qué murieron?"
 				}
 				
 				var chart = new google.visualization.PieChart(document.getElementById(visualization));
