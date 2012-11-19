@@ -104,6 +104,17 @@
 
 		var layer = null;
 		function initialize() {
+		
+	
+			
+			$.ajax({
+				type: 'POST',
+				url: 'http://200.51.91.231/censo2010/',
+				data: {indicador: "20", region:"1", mapear:"mapear"},
+				success: function(data){alert("data");},
+				dataType: "jsonp"
+			});
+		
 			var type = $('input[name=group1]:checked').val();
 			var anio = '2010';
 			var map = new google.maps.Map(document.getElementById('map-canvas'), {

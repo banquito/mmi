@@ -84,7 +84,7 @@
           </div>
           <div class="span7">
             <div>
-              <p>En el año X [año] Y [cantidad de muertes ese año] mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atención del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este año fue de Z [tasa de MM].</p>
+              <p>En el año <span id="anio-leyenda"></span> <span id="cantidad-leyenda"></span> mujeres murieron en la Argentina durante el embarazo, parto o posparto por diversas causas, principalmente por falta de control durante el embarazo, deficiencias en la atención del parto y a complicaciones causadas por el aborto inseguro. La tasa de muerte materna para este año fue de <span id="tasa-leyenda"></span>.</p>
 			  <div id="visualization2"></div>
             </div>
             <div>
@@ -128,19 +128,20 @@
 
 <script id="infoWindowTemplateTasa" type="text/x-jquery-tmpl"> 
 	<div class='googft-info-window' style='font-family: sans-serif'>
-		Provincia: ${provincia.value}. </br>
-		Tasa de mortalidad materna:XXX </br>
-		Tasa global de fecundidad 2010: XXX </br>
-		Proporci&oacute;n de egresos por abortos: XXX </br>  
-		Proporci&oacute;n de nacidos vivos atendidos por personal capacitado: XXX </br>
+		Provincia: <b>${provincia.value}</b>. </br>
+		Tasa de mortalidad materna: <b>${tasa.value}</b> </br>
+		Tasa global de fecundidad 2010: <b>${fecundidad.value}</b> </br>
+		Proporci&oacute;n de egresos por abortos: <b>${Aborto_P.value}</b> </br>  
+		Proporci&oacute;n de nacidos vivos atendidos por personal capacitado: <b>${atendido_per_capac.value}</b> </br>
 		<a href='provincial?provincia=${provincia.value}' >Detalle de provincia</a>
 	</div>
 </script>
 <script id="infoWindowTemplateCausa" type="text/x-jquery-tmpl"> 
 	<div class='googft-info-window' style='font-family: sans-serif'>
-		XX mujeres que residían en [NOMBRE PROVINCIA] </br> 
-		murieron en el año XX por [CAUSA Y], </br>
-		un xx% sobre el total de las muertes obstétricas de esta provincia.
+		<b> ${$item.totalCausa}</b>  mujeres que residían en <b>${provincia.value}</b> </br> 
+		murieron en el año <b>${anio.value}</b> por <b>${$item.causa}</b>, </br>
+		un <b>${$item.porcentajeCausa}</b>% sobre el total de las muertes obstétricas de esta provincia.</br>
+		<a href='provincial?provincia=${provincia.value}' >Detalle de provincia</a>
 	</div>
 </script>
 
@@ -219,12 +220,18 @@
 			'Enf_por_VIH_P': {'min': 0, 'max': 100, 'colors': ['#F6CEF5', '#F5A9F2', '#FA58F4', '#FF00FF', '#B404AE']},
 			'Otras_ind_P': {'min': 0, 'max': 100, 'colors': ['#D0F5A9', '#ACFA58', '#80FF00', '#5FB404', '#38610B']}
 		}
-
-
+		
+		var causasValue = ["tasa", "Aborto_P", "T_Hipert_P", "T_Placenta_P", "Otras_directas_P", "Hemorragia_post_P", "Sepsis_y_O_P", "Enf_por_VIH_P", "Otras_ind_P" ];
+		var causasText = ["Tasa", "Embarazo terminado en aborto", "Trastornos hipertensivos", "Trastornos de placenta y hemorragias", "Otras causas directas", "Hemorragia postparto", "Sepsis", "Enfermedad por V.I.H.", "Otras causas indirectas"];
+		var anioValue = [2006, 2007, 2008, 2009, 2010];
+		var anioCantidad = ["333", "306", "296", "410", "331"];
+		var anioTasa = ["4.8", "4.4", "4.0", "5.5", "4.4"];
+				
 		var layer = null;
+		var type = null;
 		function initialize() {
-			var type = 'tasa';
 			var anio = '2010';
+			type = 'tasa'
 			var map = new google.maps.Map(document.getElementById('map-canvas'), {
 				center: new google.maps.LatLng(-38.416097, -63.616672),
 				zoom: 4,
@@ -245,15 +252,16 @@
 				$( "#anio" ).text( ui.value );
 				anio = ui.value;											
 				if (type == "tasa"){
-					updateLayerQuery(layer, type);
-					styleLayerBySector(layer, anio, type);
+					updateLayerQuery(layer, anio);
+					styleLayerBySector(layer, type);
 					drawVisualizationTablaTasa(anio);
 				}else{
-					updateLayerQuery(layer, "causa", anio);
-					styleLayerBySector(layer, type, type);
+					updateLayerQuery(layer, anio);
+					styleLayerBySector(layer, type);
 					drawVisualizationCausas(anio)
 					drawVisualizationTabla(anio)						
-				}					
+				}
+				refreshLeyenda(anio);				
 			}
 		});
 			
@@ -262,16 +270,16 @@
 			$(this).tab('show');
 			type = this.attributes["value"].nodeValue;
 			if (type == "tasa"){
-				updateLayerQuery(layer, type);
-				styleLayerBySector(layer, anio, type);
+				updateLayerQuery(layer, anio);
+				styleLayerBySector(layer, type);
 				updateLegend(type);
 				//drawVisualizationTablaTasa(anio);
 				$("#visualization").empty();	
 				drawVisualizationTasasProvincias();
 				$("#visualization2").empty();					
 			}else{
-				updateLayerQuery(layer, "causa", anio);
-				styleLayerBySector(layer, type, type);
+				updateLayerQuery(layer, anio);
+				styleLayerBySector(layer, type);
 				updateLegend(type);
 				drawVisualizationCausas(anio);
 				drawVisualizationCausasTotales();
@@ -285,70 +293,51 @@
 		})
 
         layer = new google.maps.FusionTablesLayer();
-        updateLayerQuery(layer, type);
+        updateLayerQuery(layer, anio);
         layer.setMap(map);
 
         createLegend(map, type);
-        styleLayerBySector(layer, anio, type);
+        styleLayerBySector(layer, type);
         styleMap(map);
 		drawVisualizationTasasProvincias();
 		drawVisualizationTablaTasa(anio);
 		
+		refreshLeyenda(2010);
+		
 		google.maps.event.addListener(layer, 'click', function(e) {
-			/*var provincia = e.row["provincia"].value
-			var tasa = e.row[$( "#anio" ).text()].value;
-			var parametros = jQuery.param({ provincia:provincia});
-            e.infoWindowHtml =jQuery.validator.format(e.infoWindowHtml, tasa)
-			e.infoWindowHtml = "<label>Tasa de mortalidad:</label><p>"+tasa+"</p><br /><a href='\DetalleProvincia.html?"+parametros+"' >detalle de provincia</a>";*/
-			if (type = "tasa"){
+			if (type == "tasa"){
 				e.infoWindowHtml = $('#infoWindowTemplateTasa').tmpl(e.row).get(0).outerHTML;
 			}else{
-				e.infoWindowHtml = $('#infoWindowTemplateCausa').tmpl(e.row).get(0).outerHTML;
+				e.infoWindowHtml = $('#infoWindowTemplateCausa').tmpl(e.row, { 
+																				causa: causasText[jQuery.inArray(type, causasValue)],
+																				porcentajeCausa: e.row[type].value,
+																				totalCausa: e.row[(type.replace("_P", ""))].value
+																			}).get(0).outerHTML;
 			}
 		});
       }
 	  
-	function getInfoWindow(row, type)
-	{
-
+	function refreshLeyenda(anio){
+		$("#anio-leyenda")[0].textContent = anio;
+		$("#cantidad-leyenda")[0].textContent = anioCantidad[jQuery.inArray(anio, anioValue)];
+		$("#tasa-leyenda")[0].textContent = anioTasa[jQuery.inArray(anio, anioValue)];
 	}	  
 	  
-	  function updateLayerQuery(layer, type, anio, provincia) {			
-		var where = "";
-		if (type == "causa"){			
-			if (anio) {
-				where += " anio = '" + anio + "'";
-			}
-			
-			layer.setOptions({
-			  query: {
-				select: 'geometry',
-				from: '1u1_H_d5X6DaGQHsIewtDYev1dsL8HWDhjj-NTP0',
-				where: where
-			  }
-			});
+	function updateLayerQuery(layer, anio) {			
+		var where = "";		
+		if (anio) {
+			where += " anio = '" + anio + "'";
 		}
-        if (type == "tasa"){
-			layer.setOptions({
-			  query: {
-				select: 'kml', 
-				from: '1X9szNNMS5MKGEgnUUjb7XRT4ZXci77WsJAIzAIQ'				
-			  }
-			});
-		}
-      }
+		
+		layer.setOptions({
+		  query: {
+			select: 'geometry',
+			from: '1fW45Do4UhU9wknq2B57vOVza9VBi5HL4kiY58jM',
+			where: where
+		  }
+		});
+	}
 	  
-	  function ProvinciaDetalle(provincia, lat, lng)
-		{
-			updateLayerQuery(layer, "tasa");
-				
-			layer.e.setZoom(6);
-			layer.e.setCenter(new google.maps.LatLng(lat, lng));	
-			drawVisualization(provincia);
-			drawVisualizationCodMuer(provincia);
-			
-			return false;
-	 }
 
       function createLegend(map, type) {
         var legendWrapper = document.createElement('div');
@@ -371,7 +360,7 @@
         legend.id = 'legend';
 
         var title = document.createElement('p');
-        title.innerHTML = sector;
+        title.innerHTML = causasText[jQuery.inArray(sector, causasValue)];
         legend.appendChild(title);
 
         var layerStyle = LAYER_STYLES[sector];
@@ -406,7 +395,7 @@
         legendContent(legendWrapper, sector);
       }
 
-      function styleLayerBySector(layer, anio, type) {
+      function styleLayerBySector(layer, type) {
         var layerStyle = LAYER_STYLES[type];
         var colors = layerStyle.colors;
         var minNum = layerStyle.min;
@@ -423,7 +412,7 @@
         for (var i = 0; i < colors.length; i++) {
           var newMin = minNum + step * i;
           styles.push({
-            where: generateWhere(newMin, anio),
+            where: generateWhere(newMin, type),
             polygonOptions: {
               fillColor: colors[i],
               fillOpacity: 1
@@ -579,45 +568,6 @@
           }
         });
       }
-	  
-	  function drawVisualizationCodMuer(provincia) {
-			var tablename = "";
-			if ($( "#anio" ).text() == "2010")
-			{
-				tablename = "1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk";
-			}
-			if ($( "#anio" ).text() == "2009")
-			{
-				tablename = "1HommdMsjS5dhOu6PIWmjwvIw6mhwm0waNRI3WYk";
-			}
-			if ($( "#anio" ).text() == "2008")
-			{
-				tablename = "1AUODHy9FzxuXrdA6XFneBsAnglRNUnbAilkuGuU";
-			}
-			if ($( "#anio" ).text() == "2007")
-			{
-				tablename = "1oii1zpRYUyYyn5ux1GTzLjXJpOBYL44XQR3bLhw";
-			}
-			if ($( "#anio" ).text() == "2006")
-			{
-				tablename = "1i9UlJDDVcjYz8oWwTY-_6ZXW64QO2TOzvLmn8m4";
-			}
-				  
-			google.visualization.drawChart({
-			   containerId: "visualization2",
-			   dataSourceUrl: "http://www.google.com/fusiontables/gvizdata?tq=",
-			   query:"SELECT  CODMUER, count() FROM " + tablename + " WHERE OCURRENCIA contains ignoring case '"+ provincia + "' GROUP BY CODMUER" ,
-			   refreshInterval: 5,
-			   chartType: "PieChart",
-			   options: {
-				  alternatingRowStyle: true,
-				  showRowNumber : true,
-				  title: provincia,
-				  height: 800,
-                  width: 600
-			   }
-			});
-		}
 
       google.maps.event.addDomListener(window, 'load', initialize);
 </script>
