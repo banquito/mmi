@@ -134,7 +134,7 @@
 		Provincia: <b>${provincia.value}</b>. </br>
 		Tasa de mortalidad materna: <b>${tasa.value}</b> </br>
 		Tasa global de fecundidad 2010: <b>${fecundidad.value}</b> </br>
-		Proporci&oacute;n de egresos por abortos: <b>${Aborto_P.value}</b> </br>  
+		Proporci&oacute;n de egresos por abortos: <b>${$item.porcentajeAborto}</b> </br>  
 		Proporci&oacute;n de nacidos vivos atendidos por personal capacitado: <b>${atendido_per_capac.value}</b> </br>
 		<a href='provincial?provincia=${provincia.value}' >Detalle de provincia</a>
 	</div>
@@ -309,11 +309,13 @@
 		
 		google.maps.event.addListener(layer, 'click', function(e) {
 			if (type == "tasa"){
-				e.infoWindowHtml = $('#infoWindowTemplateTasa').tmpl(e.row).get(0).outerHTML;
+				e.infoWindowHtml = $('#infoWindowTemplateTasa').tmpl(e.row, {
+																				porcentajeAborto: parseFloat(e.row['Aborto_P'].value).toFixed(2)
+																			}).get(0).outerHTML;
 			}else{
 				e.infoWindowHtml = $('#infoWindowTemplateCausa').tmpl(e.row, { 
 																				causa: causasText[jQuery.inArray(type, causasValue)],
-																				porcentajeCausa: e.row[type].value,
+																				porcentajeCausa: parseFloat(e.row[type].value).toFixed(2),
 																				totalCausa: e.row[(type.replace("_P", ""))].value
 																			}).get(0).outerHTML;
 			}
